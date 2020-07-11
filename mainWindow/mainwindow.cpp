@@ -43,23 +43,23 @@ MainWindow::MainWindow(QWidget *parent)
 
     SimFigure *AccOFig = new SimFigure();
     layout->addWidget(AccOFig);
-    AccOFig->removeButtons();
+    AccOFig->showAxisControls(false);
 
     SimFigure *FOFig = new SimFigure();
     layout->addWidget(FOFig);
-    FOFig->removeButtons();
+    FOFig->showAxisControls(false);
 
     SimFigure *HFig = new SimFigure();
     layout->addWidget(HFig);
-    HFig->removeButtons();
+    HFig->showAxisControls(false);
 
     SimFigure *FIFig = new SimFigure();
     layout->addWidget(FIFig);
-    FIFig->removeButtons();
+    FIFig->showAxisControls(false);
 
     SimFigure *AccIFig = new SimFigure();
     layout->addWidget(AccIFig);
-    AccIFig->removeButtons();
+    AccIFig->showAxisControls(false);
 
 
     // initial values
