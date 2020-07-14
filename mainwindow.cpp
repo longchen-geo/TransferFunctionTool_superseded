@@ -12,8 +12,9 @@
 #include <QMessageBox>
 #include <QDesktopServices>
 #include <QUrl>
-#include <QSpinBox>
+#include <QDoubleSpinBox>
 #include <QLabel>
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -41,25 +42,45 @@ MainWindow::MainWindow(QWidget *parent)
     header->setHeadingText(appName);
     layout->addWidget(header);
 
-    SimFigure *AccOFig = new SimFigure();
+    AccOFig = new SimFigure();
     layout->addWidget(AccOFig);
     AccOFig->showAxisControls(false);
+    AccOFig->setMinimumHeight(150);
+    AccOFig->setXLabel("Time [s]");
+    AccOFig->setYLabel("Accel. [g]");
+    AccOFig->setLabelFontSize(8);
 
-    SimFigure *FOFig = new SimFigure();
+    FOFig = new SimFigure();
     layout->addWidget(FOFig);
     FOFig->showAxisControls(false);
+    FOFig->setMinimumHeight(150);
+    FOFig->setXLabel("Freq. [Hz]");
+    FOFig->setYLabel("F. Ampl. [g-s]");
+    FOFig->setLabelFontSize(8);
 
-    SimFigure *HFig = new SimFigure();
+    HFig = new SimFigure();
     layout->addWidget(HFig);
     HFig->showAxisControls(false);
+    HFig->setMinimumHeight(150);
+    HFig->setXLabel("Freq. [Hz]");
+    HFig->setYLabel("[H]");
+    HFig->setLabelFontSize(8);
 
-    SimFigure *FIFig = new SimFigure();
+    FIFig = new SimFigure();
     layout->addWidget(FIFig);
     FIFig->showAxisControls(false);
+    FIFig->setMinimumHeight(150);
+    FIFig->setXLabel("Freq. [Hz]");
+    FIFig->setYLabel("F. Ampl. [g-s]");
+    FIFig->setLabelFontSize(8);
 
-    SimFigure *AccIFig = new SimFigure();
+    AccIFig = new SimFigure();
     layout->addWidget(AccIFig);
     AccIFig->showAxisControls(false);
+    AccIFig->setMinimumHeight(150);
+    AccIFig->setXLabel("Time [s]");
+    AccIFig->setYLabel("Accel. [g]");
+    AccIFig->setLabelFontSize(8);
 
 
     // initial values
@@ -69,6 +90,8 @@ MainWindow::MainWindow(QWidget *parent)
     double max_Hs = 200;
     double Vs = 500.0;
     double max_Vs = 1000;
+    m_TFunctionCalc = TFunctionCalc(damping, Hs, Vs);
+    updatePlots();
 
     // ------------------------------------------------------------------------
     // Controls Boxes
@@ -78,38 +101,50 @@ MainWindow::MainWindow(QWidget *parent)
     // layoutB->setColumnStretch(0,0);
     // layoutB->setRowStretch(0,0);
 
-    QSpinBox *vsSpinBox = new QSpinBox;
+    QDoubleSpinBox *vsSpinBox = new QDoubleSpinBox;
     vsSpinBox->setRange(0, max_Vs);
     vsSpinBox->setValue(Vs);
+    vsSpinBox->setSingleStep(0.1);
 
     QSlider *vsSlider = new QSlider(Qt::Horizontal);
-    vsSlider->setRange(0, max_Vs);
-    vsSlider->setValue(Vs);
+    vsSlider->setRange(0, max_Vs * 10);
+    vsSlider->setValue(Vs * 10);
 
-    connect(vsSpinBox, SIGNAL(valueChanged(int)),vsSlider,SLOT(setValue(int)));
-    connect(vsSlider,SIGNAL(valueChanged(int)),vsSpinBox,SLOT(setValue(int)));
+    connect(vsSpinBox, SIGNAL(valueChanged(double)),this,SLOT(notifyDoubleValueChanged(double)));
+    connect(this, SIGNAL(intValueChanged(int)), vsSlider, SLOT(setValue(int)));
+    connect(vsSlider,SIGNAL(valueChanged(int)),this,SLOT(notifyIntValueChanged(int)));
+    connect(this, SIGNAL(doubleValueChanged(double)), vsSpinBox, SLOT(setValue(double)));
+    connect(vsSpinBox,SIGNAL(valueChanged(double)),this,SLOT(setVs(double)));
 
-    QSpinBox *thicknessSpinBox = new QSpinBox;
+    QDoubleSpinBox *thicknessSpinBox = new QDoubleSpinBox;
     thicknessSpinBox->setRange(0, max_Hs);
     thicknessSpinBox->setValue(Hs);
+    thicknessSpinBox->setSingleStep(0.1);
 
     QSlider *thicknessSlider = new QSlider(Qt::Horizontal);
-    thicknessSlider->setRange(0, max_Hs);
-    thicknessSlider->setValue(Hs);
+    thicknessSlider->setRange(0, max_Hs * 10);
+    thicknessSlider->setValue(Hs * 10);
 
-    connect(thicknessSpinBox, SIGNAL(valueChanged(int)),thicknessSlider,SLOT(setValue(int)));
-    connect(thicknessSlider,SIGNAL(valueChanged(int)),thicknessSpinBox,SLOT(setValue(int)));
+    // connect(thicknessSpinBox, SIGNAL(valueChanged(double)),this,SLOT(notifyDoubleValueChanged(double)));
+    // connect(this, SIGNAL(intValueChanged(int)), thicknessSlider, SLOT(setValue(int)));
+    // connect(thicknessSlider,SIGNAL(valueChanged(int)),this,SLOT(notifyIntValueChanged(int)));
+    // connect(this, SIGNAL(doubleValueChanged(double)), thicknessSpinBox, SLOT(setValue(double)));
+    connect(thicknessSpinBox,SIGNAL(valueChanged(double)),this,SLOT(setHs(double)));
 
-    QSpinBox *dampingSpinBox = new QSpinBox;
+    QDoubleSpinBox *dampingSpinBox = new QDoubleSpinBox;
     dampingSpinBox->setRange(0, max_damping);
     dampingSpinBox->setValue(damping);
+    dampingSpinBox->setSingleStep(0.1);
 
     QSlider *dampingSlider = new QSlider(Qt::Horizontal);
-    dampingSlider->setRange(0, max_damping);
-    dampingSlider->setValue(damping);
+    dampingSlider->setRange(0, max_damping * 10);
+    dampingSlider->setValue(damping * 10);
 
-    connect(dampingSpinBox, SIGNAL(valueChanged(int)),dampingSlider,SLOT(setValue(int)));
-    connect(dampingSlider,SIGNAL(valueChanged(int)),dampingSpinBox,SLOT(setValue(int)));
+    // connect(dampingSpinBox, SIGNAL(valueChanged(double)),this,SLOT(notifyDoubleValueChanged(double)));
+    // connect(this, SIGNAL(intValueChanged(int)), dampingSlider, SLOT(setValue(int)));
+    // connect(dampingSlider,SIGNAL(valueChanged(int)),this,SLOT(notifyIntValueChanged(int)));
+    // connect(this, SIGNAL(doubleValueChanged(double)), thicknessSpinBox, SLOT(setValue(double)));
+    connect(dampingSpinBox,SIGNAL(valueChanged(double)),this, SLOT(setDamping(double)));
 
     // Add Widgets to Layout
     QGroupBox *vsBox = new QGroupBox(tr("Shear Wave Velocity [m/sec]:"));
@@ -147,20 +182,38 @@ MainWindow::MainWindow(QWidget *parent)
 
     //
     this->createActions();
-
 }
 
 MainWindow::~MainWindow()
 {
-    // delete ui;
+    delete ui;
 }
 
 
 void MainWindow::createActions() {
+    QMenu *openMenu = menuBar()->addMenu(tr("&Load Motion"));
+    QAction *openAction = new QAction(tr("&Open"), this);
+    openAction->setShortcuts(QKeySequence::Open);
+    openAction->setStatusTip(tr("Open an existing file"));
+    connect(openAction, &QAction::triggered, this, &MainWindow::open);
+    openMenu->addAction(openAction);
+
     QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
     QAction *versionAct = helpMenu->addAction(tr("&Version"), this, &MainWindow::version);
     QAction *aboutAct = helpMenu->addAction(tr("&About"), this, &MainWindow::about);
     QAction *copyrightAct = helpMenu->addAction(tr("&License"), this, &MainWindow::copyright);
+}
+
+void MainWindow::open()
+{
+    QString fileName = QFileDialog::getOpenFileName(this);
+    if (!fileName.isEmpty())
+        loadFile(fileName);
+}
+
+void MainWindow::loadFile(const QString &fileName)
+{
+
 }
 
 void MainWindow::version()
@@ -249,5 +302,42 @@ void MainWindow::copyright()
   QGridLayout *layout = (QGridLayout*)msgBox.layout();
   layout->addItem(theSpacer, layout->rowCount(),0,1,layout->columnCount());
   msgBox.exec();
+
+}
+
+
+void MainWindow::setDamping(double damping)
+{
+    m_TFunctionCalc.setDamping(damping);
+    m_TFunctionCalc.calculate();
+    updatePlots();
+}
+
+void MainWindow::setHs(double Hs)
+{
+    m_TFunctionCalc.setHs(Hs);
+    m_TFunctionCalc.calculate();
+    updatePlots();
+}
+
+void MainWindow::setVs(double Vs)
+{
+    m_TFunctionCalc.setVs(Vs);
+    m_TFunctionCalc.calculate();
+    updatePlots();
+}
+
+void MainWindow::updatePlots()
+{
+    m_time = m_TFunctionCalc.getTime();
+    m_accInput = m_TFunctionCalc.getAccel();
+    m_freq = m_TFunctionCalc.getFreq();
+    m_soilTF = m_TFunctionCalc.getSoilTF();
+
+    HFig->clear();
+    HFig->plot(m_freq, m_soilTF, SimFigure::LineType::Solid, Qt::black);
+
+    AccIFig->clear();
+    AccIFig->plot(m_time, m_accInput, SimFigure::LineType::Solid, Qt::blue);
 
 }

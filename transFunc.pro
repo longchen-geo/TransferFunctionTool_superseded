@@ -16,14 +16,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    mainWindow/MainWindow.cpp \
+    MainWindow.cpp \
+    TFunctionCalc.cpp \
     main.cpp
 
 HEADERS += \
-    mainWindow/MainWindow.h
+    MainWindow.h \
+    TFunctionCalc.h
 
 FORMS += \
-    mainWindow/MainWindow.ui
+    MainWindow.ui
+
+INCLUDEPATH += $$quote("C:/Program Files (x86)/IntelSWTools/compilers_and_libraries_2020.1.216/windows/mkl/include")
 
 include(../SimCenterCommon/Common/Common.pri)
 include(../SimCenterCommon/SimFigure/SimFigure.pri)
