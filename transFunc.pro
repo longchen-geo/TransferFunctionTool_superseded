@@ -29,6 +29,9 @@ FORMS += \
 
 INCLUDEPATH += $$quote("C:/Program Files (x86)/IntelSWTools/compilers_and_libraries_2020.1.216/windows/mkl/include")
 
+LIBS += -L"C:/Program Files (x86)/IntelSWTools/compilers_and_libraries_2020.1.216/windows/mkl/lib/intel64_win" \
+    -lmkl_core -lmkl_intel_ilp64 -lmkl_intel_lp64 -lmkl_sequential
+
 include(../SimCenterCommon/Common/Common.pri)
 include(../SimCenterCommon/SimFigure/SimFigure.pri)
 win32: include(C:\qwt-6.1.5\features\qwt.prf)

@@ -19,22 +19,46 @@ public:
     ~MainWindow();
 
 signals:
-    void doubleValueChanged(double doubleValue);
-    void intValueChanged(int intValue);
+    void doubleVsValueChanged(double doubleValue);
+    void intVsValueChanged(int intValue);
+    void doubleHsValueChanged(double doubleValue);
+    void intHsValueChanged(int intValue);
+    void doubleDampingValueChanged(double doubleValue);
+    void intDampingValueChanged(int intValue);
 
 private slots:
     void setDamping(double damping);
     void setVs(double Vs);
     void setHs(double H);
 
-    void notifyIntValueChanged(int value) {
+    void notifyVsIntValueChanged(int value) {
          double doubleValue = value / 10.0;
-         emit doubleValueChanged(doubleValue);
+         emit doubleVsValueChanged(doubleValue);
      }
 
-    void notifyDoubleValueChanged(double value) {
+    void notifyVsDoubleValueChanged(double value) {
          int intValue = value * 10;
-         emit intValueChanged(intValue);
+         emit intVsValueChanged(intValue);
+     }
+
+    void notifyHsIntValueChanged(int value) {
+         double doubleValue = value / 10.0;
+         emit doubleHsValueChanged(doubleValue);
+     }
+
+    void notifyHsDoubleValueChanged(double value) {
+         int intValue = value * 10;
+         emit intHsValueChanged(intValue);
+     }
+
+    void notifyDampingIntValueChanged(int value) {
+         double doubleValue = value / 100.0;
+         emit doubleDampingValueChanged(doubleValue);
+     }
+
+    void notifyDampingDoubleValueChanged(double value) {
+         int intValue = value * 100;
+         emit intDampingValueChanged(intValue);
      }
 
     /*
@@ -59,6 +83,8 @@ private:
 
     QVector<double> m_accInput;
     QVector<double> m_accOutput;
+    QVector<double> m_absFft;
+    QVector<double> m_absIFft;
     QVector<double> m_time;
     QVector<double> m_freq;
     QVector<double> m_soilTF;

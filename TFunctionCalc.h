@@ -12,12 +12,14 @@ public:
     TFunctionCalc(double damping = 0.1, double H = 10, double Vs = 500);
     ~TFunctionCalc();
 
-    QVector<double> abssoilTF();
     void calcSoilTf(QVector<std::complex<double>>& tf);
+    void fft(QVector<double> ts, QVector<std::complex<double> >& fas);
+    void ifft(QVector<std::complex<double>> fas, QVector<double>& ts);
     void calculate();
     void calculateRS();
 
-    void setFreq(int length = 100);
+    void setFreq();
+    void setTime();
     void setDamping(double damping);
     void setHs(double H);
     void setVs(double Vs);
@@ -26,15 +28,18 @@ public:
     QVector<double> getSoilTF();
     QVector<double> getFreq();
     QVector<double> getAccel();
+    QVector<double> getAccelT();
     QVector<double> getTime();
+    QVector<double> getFft();
+    QVector<double> getIFft();
 protected:
 
     QVector<double> m_acc;
-    // QVector<double> m_accT;
+    QVector<double> m_accT;
     QVector<double> m_time;
     QVector<double> m_freq;
-    // QVector<double> m_absaccB;
-    // QVector<double> m_absaccT;
+    QVector<double> m_absFft;
+    QVector<double> m_absIFft;
     QVector<double> m_SoilTF;
     QVector<double> m_absSoilTF;
 

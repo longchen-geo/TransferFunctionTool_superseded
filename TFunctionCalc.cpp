@@ -1,4 +1,6 @@
 #include "TFunctionCalc.h"
+#include <mkl_dfti.h>
+// #include <mkl.h>
 
 #define PI 3.141592653590
 
@@ -12,14 +14,15 @@ TFunctionCalc::TFunctionCalc(double damping, double H, double Vs)
     //Read bottom acceleration record
     accelRecord();
     //Evaluate soil transfer function and evaluate top soil response
-    setFreq(m_acc.size());
+    setFreq();
+    setTime();
     calculate();
 }
 
 TFunctionCalc::~TFunctionCalc()
 {
-}
 
+}
 
 // Calculate soil transfer function and surface soil response
 void TFunctionCalc::calculate()
@@ -28,71 +31,33 @@ void TFunctionCalc::calculate()
     QVector<std::complex<double> > SoilTF(m_freq.size());
     QVector<double> absSoilTF(m_freq.size());
 
+    // Compute the Fourier amplitude spectrum
+    QVector<std::complex<double>> fas(m_freq.size());
+    fft(m_acc, fas);
+    QVector<double> absfas(fas.size());
+    for ( int i = 0; i < fas.size(); i++ ) {
+        absfas[i] = abs(fas[i]);
+    }
+    m_absFft = absfas;
+
+    // Compute transfer function
     calcSoilTf(SoilTF);
     for ( int i = 0; i < m_freq.size(); i++ ) {
         absSoilTF[i] = abs(SoilTF[i]);
     }
     m_absSoilTF = absSoilTF;
 
-    //Define time QVector
-    int n = m_acc.size();
-    m_time.resize(n);
-    for (int i=0; i < m_time.size();i++){
-        m_time[i]=  i * m_dt;
+    // Compute surface soil response
+    QVector<std::complex<double>> ifas(m_freq.size());
+    QVector<double> absfas2(ifas.size());
+    for (int i = 0; i < m_freq.size(); i++) {
+        ifas[i] = fas[i] * SoilTF[i];
+        absfas2[i] = abs(ifas[i]);
     }
-
-  /*
-    //Find n closest to power of two
-    n = 1;
-    while (n < m_acc.size()) {
-        n <<= 1;
-    }
-    // Initialize the input array and pad it with zeros
-    QVector<double> data(n);
-    QVector<double> data2(n);
-
-    for ( int i = 0; i < data.size(); i++ ) {
-        data[i] = (i < m_acc.size()) ? m_acc.at(i) : 0.0;
-    }
-
-    // Compute the Fourier amplitude spectrum
-    QVector<std::complex<double> > fas;
-    fft( data, fas );
-    QVector<double> absfas(fas.size());
-    for ( int i = 0; i < fas.size(); i++ ) {
-        absfas[i] = abs(fas[i]);
-    }
-    m_absaccB = absfas;
-
-    // Compute the frequency QVector
-    QVector<double> freq(fas.size());
-
-
-    // Evaluate Soil Trasfer Function
-    QVector<std::complex<double> > SoilTF(freq.size());
-    QVector<double> absSoilTF(freq.size());
-    QVector<double> realTF(freq.size());
-    QVector<double> imagTF(freq.size());
-
-    calcSoilTf(m_damping, m_H, m_Vs, freq, SoilTF );
-    for ( int i = 0; i < freq.size(); i++ ) {
-        absSoilTF[i] = abs(SoilTF[i]);
-        //realTF[i] = real(SoilTF[i]);
-        //imagTF[i] = imag(SoilTF[i]);
-    }
-    m_absSoilTF = absSoilTF;
-
-    // Evaluate surface soil response
-    QVector<std::complex<double> > fas2(freq.size());
-    QVector<double> absfas2(freq.size());
-    for ( int i = 0; i < freq.size(); i++ ) {
-        fas2[i] = fas[i]*SoilTF[i];
-        absfas2[i] = abs(fas2[i]);
-    }
-    m_absaccT = absfas2;
-    ifft( fas2, data2 );
-    m_accT = data2;
-    */
+    m_absIFft = absfas2;
+    QVector<double> accT(m_acc.size());
+    ifft(ifas, accT);
+    m_accT = accT;
 }
 
 
@@ -118,14 +83,54 @@ void TFunctionCalc::calcSoilTf(QVector<std::complex<double>>& tf)
     }
 }
 
-void TFunctionCalc::setFreq(int length)
+
+void TFunctionCalc::fft(QVector<double> ts, QVector<std::complex<double>>& fas)
 {
-    QVector<double> freq(length);
+
+    DFTI_DESCRIPTOR_HANDLE descriptor;
+    MKL_LONG status;
+
+    status = DftiCreateDescriptor(&descriptor, DFTI_DOUBLE, DFTI_REAL, 1, ts.size()); //Specify size and precision
+    status = DftiSetValue(descriptor, DFTI_PLACEMENT, DFTI_NOT_INPLACE);
+    status = DftiSetValue(descriptor, DFTI_CONJUGATE_EVEN_STORAGE, DFTI_COMPLEX_COMPLEX);
+    status = DftiCommitDescriptor(descriptor); //Finalize the descriptor
+    status = DftiComputeForward(descriptor, ts.data(), fas.data()); //Compute the Forward FFT
+    status = DftiFreeDescriptor(&descriptor); //Free the descriptor
+}
+
+void TFunctionCalc::ifft(QVector<std::complex<double>> fas, QVector<double>& ts)
+{
+    DFTI_DESCRIPTOR_HANDLE descriptor;
+    MKL_LONG status;
+
+    status = DftiCreateDescriptor(&descriptor, DFTI_DOUBLE, DFTI_REAL, 1, (fas.size() - 1) * 2); //Specify size and precision
+    status = DftiSetValue(descriptor, DFTI_PLACEMENT, DFTI_NOT_INPLACE);
+    status = DftiSetValue(descriptor, DFTI_CONJUGATE_EVEN_STORAGE, DFTI_COMPLEX_COMPLEX);
+    status = DftiSetValue(descriptor, DFTI_BACKWARD_SCALE, 1.0f / fas.size()); //Scale down the output
+    status = DftiCommitDescriptor(descriptor); //Finalize the descriptor
+    status = DftiComputeBackward(descriptor, fas.data(), ts.data()); //Compute the Forward FFT
+    status = DftiFreeDescriptor(&descriptor); //Free the descriptor
+}
+
+
+void TFunctionCalc::setFreq()
+{
+    QVector<double> freq(m_acc.size()/2+1);
     double dfreq = 1 / ( 2 * m_dt * (freq.size() - 1 ) );
     for (int i = 0; i < freq.size(); i++ ) {
         freq[i] = i * dfreq;
     }
     m_freq = freq;
+}
+
+void TFunctionCalc::setTime()
+{
+    //Define time QVector
+    m_time.resize(m_acc.size());
+    for (int i=0; i<m_time.size();i++){
+        m_time[i]=  i * m_dt;
+    }
+
 }
 
 void TFunctionCalc::setDamping(double damping)
@@ -157,9 +162,24 @@ QVector<double> TFunctionCalc::getAccel()
     return m_acc;
 }
 
+QVector<double> TFunctionCalc::getAccelT()
+{
+    return m_accT;
+}
+
 QVector<double> TFunctionCalc::getTime()
 {
     return m_time;
+}
+
+QVector<double> TFunctionCalc::getFft()
+{
+    return m_absFft;
+}
+
+QVector<double> TFunctionCalc::getIFft()
+{
+    return m_absIFft;
 }
 
 void TFunctionCalc::accelRecord(){

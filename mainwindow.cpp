@@ -102,48 +102,48 @@ MainWindow::MainWindow(QWidget *parent)
     // layoutB->setRowStretch(0,0);
 
     QDoubleSpinBox *vsSpinBox = new QDoubleSpinBox;
-    vsSpinBox->setRange(0, max_Vs);
+    vsSpinBox->setRange(0.1, max_Vs);
     vsSpinBox->setValue(Vs);
     vsSpinBox->setSingleStep(0.1);
 
     QSlider *vsSlider = new QSlider(Qt::Horizontal);
-    vsSlider->setRange(0, max_Vs * 10);
+    vsSlider->setRange(1, max_Vs * 10);
     vsSlider->setValue(Vs * 10);
 
-    connect(vsSpinBox, SIGNAL(valueChanged(double)),this,SLOT(notifyDoubleValueChanged(double)));
-    connect(this, SIGNAL(intValueChanged(int)), vsSlider, SLOT(setValue(int)));
-    connect(vsSlider,SIGNAL(valueChanged(int)),this,SLOT(notifyIntValueChanged(int)));
-    connect(this, SIGNAL(doubleValueChanged(double)), vsSpinBox, SLOT(setValue(double)));
+    connect(vsSpinBox, SIGNAL(valueChanged(double)),this,SLOT(notifyVsDoubleValueChanged(double)));
+    connect(this, SIGNAL(intVsValueChanged(int)), vsSlider, SLOT(setValue(int)));
+    connect(vsSlider,SIGNAL(valueChanged(int)),this,SLOT(notifyVsIntValueChanged(int)));
+    connect(this, SIGNAL(doubleVsValueChanged(double)), vsSpinBox, SLOT(setValue(double)));
     connect(vsSpinBox,SIGNAL(valueChanged(double)),this,SLOT(setVs(double)));
 
     QDoubleSpinBox *thicknessSpinBox = new QDoubleSpinBox;
-    thicknessSpinBox->setRange(0, max_Hs);
+    thicknessSpinBox->setRange(0.1, max_Hs);
     thicknessSpinBox->setValue(Hs);
     thicknessSpinBox->setSingleStep(0.1);
 
     QSlider *thicknessSlider = new QSlider(Qt::Horizontal);
-    thicknessSlider->setRange(0, max_Hs * 10);
+    thicknessSlider->setRange(1, max_Hs * 10);
     thicknessSlider->setValue(Hs * 10);
 
-    // connect(thicknessSpinBox, SIGNAL(valueChanged(double)),this,SLOT(notifyDoubleValueChanged(double)));
-    // connect(this, SIGNAL(intValueChanged(int)), thicknessSlider, SLOT(setValue(int)));
-    // connect(thicknessSlider,SIGNAL(valueChanged(int)),this,SLOT(notifyIntValueChanged(int)));
-    // connect(this, SIGNAL(doubleValueChanged(double)), thicknessSpinBox, SLOT(setValue(double)));
+    connect(thicknessSpinBox, SIGNAL(valueChanged(double)),this,SLOT(notifyHsDoubleValueChanged(double)));
+    connect(this, SIGNAL(intHsValueChanged(int)), thicknessSlider, SLOT(setValue(int)));
+    connect(thicknessSlider,SIGNAL(valueChanged(int)),this,SLOT(notifyHsIntValueChanged(int)));
+    connect(this, SIGNAL(doubleHsValueChanged(double)), thicknessSpinBox, SLOT(setValue(double)));
     connect(thicknessSpinBox,SIGNAL(valueChanged(double)),this,SLOT(setHs(double)));
 
     QDoubleSpinBox *dampingSpinBox = new QDoubleSpinBox;
-    dampingSpinBox->setRange(0, max_damping);
+    dampingSpinBox->setRange(0.01, max_damping);
     dampingSpinBox->setValue(damping);
-    dampingSpinBox->setSingleStep(0.1);
+    dampingSpinBox->setSingleStep(0.01);
 
     QSlider *dampingSlider = new QSlider(Qt::Horizontal);
-    dampingSlider->setRange(0, max_damping * 10);
-    dampingSlider->setValue(damping * 10);
+    dampingSlider->setRange(1, max_damping * 100);
+    dampingSlider->setValue(damping * 100);
 
-    // connect(dampingSpinBox, SIGNAL(valueChanged(double)),this,SLOT(notifyDoubleValueChanged(double)));
-    // connect(this, SIGNAL(intValueChanged(int)), dampingSlider, SLOT(setValue(int)));
-    // connect(dampingSlider,SIGNAL(valueChanged(int)),this,SLOT(notifyIntValueChanged(int)));
-    // connect(this, SIGNAL(doubleValueChanged(double)), thicknessSpinBox, SLOT(setValue(double)));
+    connect(dampingSpinBox, SIGNAL(valueChanged(double)),this,SLOT(notifyDampingDoubleValueChanged(double)));
+    connect(this, SIGNAL(intDampingValueChanged(int)), dampingSlider, SLOT(setValue(int)));
+    connect(dampingSlider,SIGNAL(valueChanged(int)),this,SLOT(notifyDampingIntValueChanged(int)));
+    connect(this, SIGNAL(doubleDampingValueChanged(double)), dampingSpinBox, SLOT(setValue(double)));
     connect(dampingSpinBox,SIGNAL(valueChanged(double)),this, SLOT(setDamping(double)));
 
     // Add Widgets to Layout
@@ -333,9 +333,21 @@ void MainWindow::updatePlots()
     m_accInput = m_TFunctionCalc.getAccel();
     m_freq = m_TFunctionCalc.getFreq();
     m_soilTF = m_TFunctionCalc.getSoilTF();
+    m_absFft = m_TFunctionCalc.getFft();
+    m_absIFft = m_TFunctionCalc.getIFft();
+    m_accOutput = m_TFunctionCalc.getAccelT();
+
+    AccOFig->clear();
+    AccOFig->plot(m_time, m_accOutput, SimFigure::LineType::Solid, Qt::blue);
+
+    FOFig->clear();
+    FOFig->plot(m_freq, m_absIFft, SimFigure::LineType::Solid, Qt::black);
 
     HFig->clear();
     HFig->plot(m_freq, m_soilTF, SimFigure::LineType::Solid, Qt::black);
+
+    FIFig->clear();
+    FIFig->plot(m_freq, m_absFft, SimFigure::LineType::Solid, Qt::black);
 
     AccIFig->clear();
     AccIFig->plot(m_time, m_accInput, SimFigure::LineType::Solid, Qt::blue);
