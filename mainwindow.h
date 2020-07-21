@@ -30,6 +30,11 @@ private slots:
     void setDamping(double damping);
     void setVs(double Vs);
     void setHs(double H);
+    void on_loadMotion_clicked();
+    void on_btn_earthquake_clicked();
+    void on_btn_sine_clicked();
+    void on_btn_cos_clicked();
+    void on_btn_sweep_clicked();
 
     void notifyVsIntValueChanged(int value) {
          double doubleValue = value / 10.0;
@@ -68,7 +73,6 @@ private slots:
     bool save();
     bool saveAs();
     */
-    void open();
     void about();
     void version();
     void copyright();

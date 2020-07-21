@@ -27,10 +27,6 @@ MainWindow::MainWindow(QWidget *parent)
     int width  = this->width()<int(0.35*rec.width())?int(0.35*rec.width()):this->width();
     this->resize(width, height);
 
-    centralWidget = new QWidget();
-    QVBoxLayout *layout = new QVBoxLayout();
-    centralWidget->setLayout(layout);
-
     //
     // add SimCenter Header
     //
@@ -38,50 +34,39 @@ MainWindow::MainWindow(QWidget *parent)
     QString appName = "<P><b><i><FONT COLOR='#000000' FONT SIZE = 4>";
     appName.append(QString("Transfer Function Tool"));
     appName.append("</i></b></P></br>");
-    HeaderWidget *header = new HeaderWidget();
-    header->setHeadingText(appName);
-    layout->addWidget(header);
+    ui->header->setHeadingText(appName);
 
-    AccOFig = new SimFigure();
-    layout->addWidget(AccOFig);
-    AccOFig->showAxisControls(false);
-    AccOFig->setMinimumHeight(150);
-    AccOFig->setXLabel("Time [s]");
-    AccOFig->setYLabel("Accel. [g]");
-    AccOFig->setLabelFontSize(8);
+    // ------------------------------------------------------------------------
+    // Add figures
+    ui->AccOFig->showAxisControls(false);
+    ui->AccOFig->setMinimumHeight(150);
+    ui->AccOFig->setXLabel("Time [s]");
+    ui->AccOFig->setYLabel("Accel. [g]");
+    ui->AccOFig->setLabelFontSize(8);
 
-    FOFig = new SimFigure();
-    layout->addWidget(FOFig);
-    FOFig->showAxisControls(false);
-    FOFig->setMinimumHeight(150);
-    FOFig->setXLabel("Freq. [Hz]");
-    FOFig->setYLabel("F. Ampl. [g-s]");
-    FOFig->setLabelFontSize(8);
+    ui->FOFig->showAxisControls(false);
+    ui->FOFig->setMinimumHeight(150);
+    ui->FOFig->setXLabel("Freq. [Hz]");
+    ui->FOFig->setYLabel("F. Ampl. [g-s]");
+    ui->FOFig->setLabelFontSize(8);
 
-    HFig = new SimFigure();
-    layout->addWidget(HFig);
-    HFig->showAxisControls(false);
-    HFig->setMinimumHeight(150);
-    HFig->setXLabel("Freq. [Hz]");
-    HFig->setYLabel("[H]");
-    HFig->setLabelFontSize(8);
+    ui->HFig->showAxisControls(false);
+    ui->HFig->setMinimumHeight(150);
+    ui->HFig->setXLabel("Freq. [Hz]");
+    ui->HFig->setYLabel("[H]");
+    ui->HFig->setLabelFontSize(8);
 
-    FIFig = new SimFigure();
-    layout->addWidget(FIFig);
-    FIFig->showAxisControls(false);
-    FIFig->setMinimumHeight(150);
-    FIFig->setXLabel("Freq. [Hz]");
-    FIFig->setYLabel("F. Ampl. [g-s]");
-    FIFig->setLabelFontSize(8);
+    ui->FIFig->showAxisControls(false);
+    ui->FIFig->setMinimumHeight(150);
+    ui->FIFig->setXLabel("Freq. [Hz]");
+    ui->FIFig->setYLabel("F. Ampl. [g-s]");
+    ui->FIFig->setLabelFontSize(8);
 
-    AccIFig = new SimFigure();
-    layout->addWidget(AccIFig);
-    AccIFig->showAxisControls(false);
-    AccIFig->setMinimumHeight(150);
-    AccIFig->setXLabel("Time [s]");
-    AccIFig->setYLabel("Accel. [g]");
-    AccIFig->setLabelFontSize(8);
-
+    ui->AccIFig->showAxisControls(false);
+    ui->AccIFig->setMinimumHeight(150);
+    ui->AccIFig->setXLabel("Time [s]");
+    ui->AccIFig->setYLabel("Accel. [g]");
+    ui->AccIFig->setLabelFontSize(8);
 
     // initial values
     double damping = 10;
@@ -95,93 +80,49 @@ MainWindow::MainWindow(QWidget *parent)
 
     // ------------------------------------------------------------------------
     // Controls Boxes
-    QGroupBox *groupBox = new QGroupBox(tr("Controls"));
 
-    QHBoxLayout *layoutB = new QHBoxLayout;
-    // layoutB->setColumnStretch(0,0);
-    // layoutB->setRowStretch(0,0);
+    ui->vsSpinBox->setRange(0.1, max_Vs);
+    ui->vsSpinBox->setValue(Vs);
+    ui->vsSpinBox->setSingleStep(0.1);
 
-    QDoubleSpinBox *vsSpinBox = new QDoubleSpinBox;
-    vsSpinBox->setRange(0.1, max_Vs);
-    vsSpinBox->setValue(Vs);
-    vsSpinBox->setSingleStep(0.1);
+    ui->vsSlider->setRange(1, max_Vs * 10);
+    ui->vsSlider->setValue(Vs * 10);
 
-    QSlider *vsSlider = new QSlider(Qt::Horizontal);
-    vsSlider->setRange(1, max_Vs * 10);
-    vsSlider->setValue(Vs * 10);
+    connect(ui->vsSpinBox, SIGNAL(valueChanged(double)),this,SLOT(notifyVsDoubleValueChanged(double)));
+    connect(this, SIGNAL(intVsValueChanged(int)), ui->vsSlider, SLOT(setValue(int)));
+    connect(ui->vsSlider,SIGNAL(valueChanged(int)),this,SLOT(notifyVsIntValueChanged(int)));
+    connect(this, SIGNAL(doubleVsValueChanged(double)), ui->vsSpinBox, SLOT(setValue(double)));
+    connect(ui->vsSpinBox,SIGNAL(valueChanged(double)),this,SLOT(setVs(double)));
 
-    connect(vsSpinBox, SIGNAL(valueChanged(double)),this,SLOT(notifyVsDoubleValueChanged(double)));
-    connect(this, SIGNAL(intVsValueChanged(int)), vsSlider, SLOT(setValue(int)));
-    connect(vsSlider,SIGNAL(valueChanged(int)),this,SLOT(notifyVsIntValueChanged(int)));
-    connect(this, SIGNAL(doubleVsValueChanged(double)), vsSpinBox, SLOT(setValue(double)));
-    connect(vsSpinBox,SIGNAL(valueChanged(double)),this,SLOT(setVs(double)));
+    ui->thicknessSpinBox->setRange(0.1, max_Hs);
+    ui->thicknessSpinBox->setValue(Hs);
+    ui->thicknessSpinBox->setSingleStep(0.1);
 
-    QDoubleSpinBox *thicknessSpinBox = new QDoubleSpinBox;
-    thicknessSpinBox->setRange(0.1, max_Hs);
-    thicknessSpinBox->setValue(Hs);
-    thicknessSpinBox->setSingleStep(0.1);
+    ui->thicknessSlider->setRange(1, max_Hs * 10);
+    ui->thicknessSlider->setValue(Hs * 10);
 
-    QSlider *thicknessSlider = new QSlider(Qt::Horizontal);
-    thicknessSlider->setRange(1, max_Hs * 10);
-    thicknessSlider->setValue(Hs * 10);
+    connect(ui->thicknessSpinBox, SIGNAL(valueChanged(double)),this,SLOT(notifyHsDoubleValueChanged(double)));
+    connect(this, SIGNAL(intHsValueChanged(int)), ui->thicknessSlider, SLOT(setValue(int)));
+    connect(ui->thicknessSlider,SIGNAL(valueChanged(int)),this,SLOT(notifyHsIntValueChanged(int)));
+    connect(this, SIGNAL(doubleHsValueChanged(double)), ui->thicknessSpinBox, SLOT(setValue(double)));
+    connect(ui->thicknessSpinBox,SIGNAL(valueChanged(double)),this,SLOT(setHs(double)));
 
-    connect(thicknessSpinBox, SIGNAL(valueChanged(double)),this,SLOT(notifyHsDoubleValueChanged(double)));
-    connect(this, SIGNAL(intHsValueChanged(int)), thicknessSlider, SLOT(setValue(int)));
-    connect(thicknessSlider,SIGNAL(valueChanged(int)),this,SLOT(notifyHsIntValueChanged(int)));
-    connect(this, SIGNAL(doubleHsValueChanged(double)), thicknessSpinBox, SLOT(setValue(double)));
-    connect(thicknessSpinBox,SIGNAL(valueChanged(double)),this,SLOT(setHs(double)));
+    ui->dampingSpinBox->setRange(0.01, max_damping);
+    ui->dampingSpinBox->setValue(damping);
+    ui->dampingSpinBox->setSingleStep(0.01);
 
-    QDoubleSpinBox *dampingSpinBox = new QDoubleSpinBox;
-    dampingSpinBox->setRange(0.01, max_damping);
-    dampingSpinBox->setValue(damping);
-    dampingSpinBox->setSingleStep(0.01);
+    ui->dampingSlider->setRange(1, max_damping * 100);
+    ui->dampingSlider->setValue(damping * 100);
 
-    QSlider *dampingSlider = new QSlider(Qt::Horizontal);
-    dampingSlider->setRange(1, max_damping * 100);
-    dampingSlider->setValue(damping * 100);
+    connect(ui->dampingSpinBox, SIGNAL(valueChanged(double)),this,SLOT(notifyDampingDoubleValueChanged(double)));
+    connect(this, SIGNAL(intDampingValueChanged(int)), ui->dampingSlider, SLOT(setValue(int)));
+    connect(ui->dampingSlider,SIGNAL(valueChanged(int)),this,SLOT(notifyDampingIntValueChanged(int)));
+    connect(this, SIGNAL(doubleDampingValueChanged(double)), ui->dampingSpinBox, SLOT(setValue(double)));
+    connect(ui->dampingSpinBox,SIGNAL(valueChanged(double)),this, SLOT(setDamping(double)));
 
-    connect(dampingSpinBox, SIGNAL(valueChanged(double)),this,SLOT(notifyDampingDoubleValueChanged(double)));
-    connect(this, SIGNAL(intDampingValueChanged(int)), dampingSlider, SLOT(setValue(int)));
-    connect(dampingSlider,SIGNAL(valueChanged(int)),this,SLOT(notifyDampingIntValueChanged(int)));
-    connect(this, SIGNAL(doubleDampingValueChanged(double)), dampingSpinBox, SLOT(setValue(double)));
-    connect(dampingSpinBox,SIGNAL(valueChanged(double)),this, SLOT(setDamping(double)));
-
-    // Add Widgets to Layout
-    QGroupBox *vsBox = new QGroupBox(tr("Shear Wave Velocity [m/sec]:"));
-    QVBoxLayout *layoutVs = new QVBoxLayout;
-    layoutVs->addWidget(vsSpinBox);
-    layoutVs->addWidget(vsSlider);
-    vsBox->setLayout(layoutVs);
-    layoutB->addWidget(vsBox);
-
-    QGroupBox *thBox = new QGroupBox(tr("Thickness [m]:"));
-    QVBoxLayout *layoutTh = new QVBoxLayout;
-    layoutTh->addWidget(thicknessSpinBox);
-    layoutTh->addWidget(thicknessSlider);
-    thBox->setLayout(layoutTh);
-    layoutB->addWidget(thBox);
-
-    QGroupBox *dampingBox = new QGroupBox(tr("Damping [%]:"));
-    QVBoxLayout *layoutDamping = new QVBoxLayout;
-    layoutDamping->addWidget(dampingSpinBox);
-    layoutDamping->addWidget(dampingSlider);
-    dampingBox->setLayout(layoutDamping);
-    layoutB->addWidget(dampingBox);
-
-    groupBox->setLayout(layoutB);
-    layout->addWidget(groupBox);
-
-    this->setCentralWidget(centralWidget);
-
-    //
-    // add SimCenter footer
-    //
-
-    FooterWidget *footer = new FooterWidget();
-    layout->addWidget(footer);
-
-    //
     this->createActions();
+
+    ui->btn_earthquake->setChecked(true);
 }
 
 MainWindow::~MainWindow()
@@ -191,20 +132,36 @@ MainWindow::~MainWindow()
 
 
 void MainWindow::createActions() {
-    QMenu *openMenu = menuBar()->addMenu(tr("&Load Motion"));
-    QAction *openAction = new QAction(tr("&Open"), this);
-    openAction->setShortcuts(QKeySequence::Open);
-    openAction->setStatusTip(tr("Open an existing file"));
-    connect(openAction, &QAction::triggered, this, &MainWindow::open);
-    openMenu->addAction(openAction);
-
     QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
     QAction *versionAct = helpMenu->addAction(tr("&Version"), this, &MainWindow::version);
     QAction *aboutAct = helpMenu->addAction(tr("&About"), this, &MainWindow::about);
     QAction *copyrightAct = helpMenu->addAction(tr("&License"), this, &MainWindow::copyright);
 }
 
-void MainWindow::open()
+
+void MainWindow::on_btn_earthquake_clicked()
+{
+    m_TFunctionCalc.earthquakeRecord();
+    updatePlots();
+}
+void MainWindow::on_btn_sine_clicked()
+{
+    m_TFunctionCalc.sinRecord();
+    updatePlots();
+}
+
+void MainWindow::on_btn_cos_clicked()
+{
+    m_TFunctionCalc.cosRecord();
+    updatePlots();
+}
+void MainWindow::on_btn_sweep_clicked()
+{
+    m_TFunctionCalc.sweepRecord();
+    updatePlots();
+}
+
+void MainWindow::on_loadMotion_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty())
@@ -337,19 +294,19 @@ void MainWindow::updatePlots()
     m_absIFft = m_TFunctionCalc.getIFft();
     m_accOutput = m_TFunctionCalc.getAccelT();
 
-    AccOFig->clear();
-    AccOFig->plot(m_time, m_accOutput, SimFigure::LineType::Solid, Qt::blue);
+    ui->AccOFig->clear();
+    ui->AccOFig->plot(m_time, m_accOutput, SimFigure::LineType::Solid, Qt::blue);
 
-    FOFig->clear();
-    FOFig->plot(m_freq, m_absIFft, SimFigure::LineType::Solid, Qt::black);
+    ui->FOFig->clear();
+    ui->FOFig->plot(m_freq, m_absIFft, SimFigure::LineType::Solid, Qt::black);
 
-    HFig->clear();
-    HFig->plot(m_freq, m_soilTF, SimFigure::LineType::Solid, Qt::black);
+    ui->HFig->clear();
+    ui->HFig->plot(m_freq, m_soilTF, SimFigure::LineType::Solid, Qt::red);
 
-    FIFig->clear();
-    FIFig->plot(m_freq, m_absFft, SimFigure::LineType::Solid, Qt::black);
+    ui->FIFig->clear();
+    ui->FIFig->plot(m_freq, m_absFft, SimFigure::LineType::Solid, Qt::black);
 
-    AccIFig->clear();
-    AccIFig->plot(m_time, m_accInput, SimFigure::LineType::Solid, Qt::blue);
+    ui->AccIFig->clear();
+    ui->AccIFig->plot(m_time, m_accInput, SimFigure::LineType::Solid, Qt::blue);
 
 }

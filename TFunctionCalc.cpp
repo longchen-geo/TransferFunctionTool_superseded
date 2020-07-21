@@ -12,11 +12,9 @@ TFunctionCalc::TFunctionCalc(double damping, double H, double Vs)
     m_Vs = Vs;
 
     //Read bottom acceleration record
-    accelRecord();
+    earthquakeRecord();
     //Evaluate soil transfer function and evaluate top soil response
-    setFreq();
-    setTime();
-    calculate();
+    // setFreq();
 }
 
 TFunctionCalc::~TFunctionCalc()
@@ -113,10 +111,11 @@ void TFunctionCalc::ifft(QVector<std::complex<double>> fas, QVector<double>& ts)
 }
 
 
-void TFunctionCalc::setFreq()
+void TFunctionCalc::setFreq(double maxFreq)
 {
     QVector<double> freq(m_acc.size()/2+1);
-    double dfreq = 1 / ( 2 * m_dt * (freq.size() - 1 ) );
+    // double dfreq = 1 / ( 2 * m_dt * (freq.size() - 1 ) );
+    double dfreq = maxFreq / freq.size();
     for (int i = 0; i < freq.size(); i++ ) {
         freq[i] = i * dfreq;
     }
@@ -182,7 +181,59 @@ QVector<double> TFunctionCalc::getIFft()
     return m_absIFft;
 }
 
-void TFunctionCalc::accelRecord(){
+void TFunctionCalc::sinRecord()
+{
+    int nPoints = 2000;
+    m_dt = 0.02;
+    m_acc.resize(nPoints);
+    QVector<double> accel;
+
+    for (double s=0.;s<=nPoints * m_dt; s+=m_dt)
+    {
+        accel.append(0.4 * sin(2 * PI * s));
+    }
+    m_acc = accel;
+    setTime();
+    setFreq();
+    calculate();
+}
+
+void TFunctionCalc::cosRecord()
+{
+    int nPoints = 2000;
+    m_dt = 0.02;
+    m_acc.resize(nPoints);
+    QVector<double> accel;
+
+    for (double s=0.;s<=nPoints * m_dt; s+=m_dt)
+    {
+        accel.append(0.4 * cos(2 * PI * s));
+    }
+    m_acc = accel;
+    setTime();
+    setFreq();
+    calculate();
+}
+
+void TFunctionCalc::sweepRecord()
+{
+    int nPoints = 8000;
+    double time;
+    m_dt = 0.005;
+    m_acc.resize(nPoints);
+    m_time.resize(nPoints);
+
+    for (int i=0; i<m_time.size();i++){
+        time = i * m_dt;
+        m_time[i]= time;
+        m_acc[i] = sin(50.0 * time + 500.0 * (time * time / 2.0) / 40.0);
+    }
+
+    setFreq(10.0);
+    calculate();
+}
+
+void TFunctionCalc::earthquakeRecord(){
     int nPoints = 2000;
     double sFactor = 981.0;
     m_dt = 0.02;
@@ -2195,6 +2246,10 @@ void TFunctionCalc::accelRecord(){
     for (int i=0; i<m_acc.size();i++){
         m_acc[i] /= sFactor;
     }
+
+    setTime();
+    setFreq();
+    calculate();
 }
 
 

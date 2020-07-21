@@ -18,12 +18,15 @@ public:
     void calculate();
     void calculateRS();
 
-    void setFreq();
+    void setFreq(double maxFreq = 25.0);
     void setTime();
     void setDamping(double damping);
     void setHs(double H);
     void setVs(double Vs);
-    void accelRecord();
+    void earthquakeRecord();
+    void sinRecord();
+    void cosRecord();
+    void sweepRecord();
 
     QVector<double> getSoilTF();
     QVector<double> getFreq();
