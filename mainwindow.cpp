@@ -15,6 +15,9 @@
 #include <QDoubleSpinBox>
 #include <QLabel>
 #include <QFileDialog>
+#include <QDesktopWidget>
+#include "Utils/dialogabout.h"
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -31,10 +34,10 @@ MainWindow::MainWindow(QWidget *parent)
     // add SimCenter Header
     //
 
-    QString appName = "<P><b><i><FONT COLOR='#000000' FONT SIZE = 4>";
-    appName.append(QString("Transfer Function Tool"));
-    appName.append("</i></b></P></br>");
-    ui->header->setHeadingText(appName);
+    // QString appName = "<P><b><i><FONT COLOR='#000000' FONT SIZE = 4>";
+    // appName.append(QString("Transfer Function Tool"));
+    // appName.append("</i></b></P></br>");
+    // ui->header->setHeadingText(appName);
 
     // ------------------------------------------------------------------------
     // Add figures
@@ -47,7 +50,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->FOFig->showAxisControls(false);
     ui->FOFig->setMinimumHeight(150);
     ui->FOFig->setXLabel("Freq. [Hz]");
-    ui->FOFig->setYLabel("F. Ampl. [g-s]");
+    ui->FOFig->setYLabel("FA [g-s]");
     ui->FOFig->setLabelFontSize(8);
 
     ui->HFig->showAxisControls(false);
@@ -59,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->FIFig->showAxisControls(false);
     ui->FIFig->setMinimumHeight(150);
     ui->FIFig->setXLabel("Freq. [Hz]");
-    ui->FIFig->setYLabel("F. Ampl. [g-s]");
+    ui->FIFig->setYLabel("FA [g-s]");
     ui->FIFig->setLabelFontSize(8);
 
     ui->AccIFig->showAxisControls(false);
@@ -119,6 +122,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->dampingSlider,SIGNAL(valueChanged(int)),this,SLOT(notifyDampingIntValueChanged(int)));
     connect(this, SIGNAL(doubleDampingValueChanged(double)), ui->dampingSpinBox, SLOT(setValue(double)));
     connect(ui->dampingSpinBox,SIGNAL(valueChanged(double)),this, SLOT(setDamping(double)));
+
+    QPixmap mypix (":/resources/schematic.png");
+    ui->schematic->setScaledContents(true);
+    ui->schematic->setPixmap(mypix);
 
     this->createActions();
 
@@ -186,13 +193,30 @@ void MainWindow::version()
 
 void MainWindow::about()
 {
+    DialogAbout *dlg = new DialogAbout();
+    QString aboutTitle("A SimCenter Tool For Transfer Function Calculation");
+    QString aboutSource = ":/resources/textAboutthis.html";
+    dlg->setTitle(aboutTitle);
+    dlg->setTextSource(aboutSource);
+
+    //
+    // adjust size of application window to the available display
+    //
+    QRect rec = QApplication::desktop()->screenGeometry();
+    int height = 0.50*rec.height();
+    int width  = 0.50*rec.width();
+    dlg->resize(width, height);
+
+    dlg->exec();
+    delete dlg;
+    /*
     QString aboutText("A SimCenter Tool For Transfer Function Calculation");
     QMessageBox msgBox;
     QSpacerItem *theSpacer = new QSpacerItem(700, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
     msgBox.setText(aboutText);
     QGridLayout *layout = (QGridLayout*)msgBox.layout();
     layout->addItem(theSpacer, layout->rowCount(),0,1,layout->columnCount());
-    msgBox.exec();
+    msgBox.exec(); */
 }
 
 void MainWindow::copyright()
