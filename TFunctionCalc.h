@@ -4,6 +4,7 @@
 #include <QList>
 #include <QString>
 #include <QVector>
+#include <QJsonArray>
 #include <complex>
 
 class TFunctionCalc
@@ -27,6 +28,7 @@ public:
     void sinRecord();
     void cosRecord();
     void sweepRecord();
+    void readGM(QJsonArray accTH, double dT, double accUnit);
 
     QVector<double> getSoilTF();
     QVector<double> getFreq();

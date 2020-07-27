@@ -16,6 +16,9 @@
 #include <QLabel>
 #include <QFileDialog>
 #include <QDesktopWidget>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonDocument>
 #include "Utils/dialogabout.h"
 
 
@@ -173,11 +176,56 @@ void MainWindow::on_loadMotion_clicked()
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty())
         loadFile(fileName);
+    updatePlots();
 }
 
 void MainWindow::loadFile(const QString &fileName)
 {
+    //
+    // open file
+    //
 
+    QFile file(fileName);
+    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+        QMessageBox::warning(this, tr("Application"),
+                             tr("Cannot read file %1:\n%2.")
+                             .arg(QDir::toNativeSeparators(fileName), file.errorString()));
+        return;
+    }
+
+    // place contents of file into json object
+    QString val;
+    val=file.readAll();
+    QJsonDocument doc = QJsonDocument::fromJson(val.toUtf8());
+    QJsonObject jsonObj = doc.object();
+
+    // close file
+    file.close();
+
+    QJsonArray events = jsonObj["Events"].toArray();
+
+    if (events.size()>0)
+    {
+        QJsonArray patterns = events[0].toObject()["pattern"].toArray();
+        QJsonArray timeseries = events[0].toObject()["timeSeries"].toArray();
+        QString type = patterns[0].toObject()["type"].toString();
+        QString tsname = patterns[0].toObject()["timeSeries"].toString();
+
+        QJsonObject units = events[0].toObject()["units"].toObject();
+        double accUnit = 1.0;
+        if(!units.isEmpty()){
+            QString lengthType = units["acc"].toString();
+            if (lengthType=="g")
+                accUnit = 9.81;
+            else if (lengthType=="m/s2")
+                accUnit = 1.0;
+            else if (lengthType=="cm/s2")
+                accUnit = 0.01;
+        }
+        double dT = timeseries[0].toObject()["dT"].toDouble();
+        QJsonArray accTH = timeseries[0].toObject()["data"].toArray();
+        m_TFunctionCalc.readGM(accTH, dT, accUnit);
+    }
 }
 
 void MainWindow::version()

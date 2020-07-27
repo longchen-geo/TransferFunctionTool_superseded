@@ -1,2 +1,6 @@
-<!DOCTYPE RCC>
-<RCC version="1.0"/>
+<RCC>
+    <qresource prefix="/">
+        <file>resources/schematic.png</file>
+        <file>resources/textAboutthis.html</file>
+    </qresource>
+</RCC>

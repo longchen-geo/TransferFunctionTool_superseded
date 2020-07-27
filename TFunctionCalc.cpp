@@ -233,6 +233,20 @@ void TFunctionCalc::sweepRecord()
     calculate();
 }
 
+void TFunctionCalc::readGM(QJsonArray accTH, double dT, double accUnit)
+{
+    int nPoints = accTH.size();
+    m_dt = dT;
+    m_acc.clear();
+    for (int ii = 0; ii < nPoints; ii++){
+        m_acc.append(accTH[ii].toDouble() * accUnit);
+    }
+    setTime();
+    setFreq();
+    calculate();
+};
+
+
 void TFunctionCalc::earthquakeRecord(){
     int nPoints = 2000;
     double sFactor = 981.0;
