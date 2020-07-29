@@ -81,6 +81,8 @@ MainWindow::MainWindow(QWidget *parent)
     double max_Hs = 200;
     double Vs = 500.0;
     double max_Vs = 1000;
+    double frequency = 5.0;
+    double max_frequency = 30.0;
     m_TFunctionCalc = TFunctionCalc(damping, Hs, Vs);
     updatePlots();
 
@@ -126,6 +128,20 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, SIGNAL(doubleDampingValueChanged(double)), ui->dampingSpinBox, SLOT(setValue(double)));
     connect(ui->dampingSpinBox,SIGNAL(valueChanged(double)),this, SLOT(setDamping(double)));
 
+    ui->frequencySpinBox->setRange(0.01, max_frequency);
+    ui->frequencySpinBox->setValue(frequency);
+    ui->frequencySpinBox->setSingleStep(0.01);
+
+    ui->frequencySlider->setRange(50, max_frequency * 100);
+    ui->frequencySlider->setValue(frequency * 100);
+    ui->groupBox_frequency->hide();
+
+    connect(ui->frequencySpinBox, SIGNAL(valueChanged(double)),this,SLOT(notifyFrequencyDoubleValueChanged(double)));
+    connect(this, SIGNAL(intFrequencyValueChanged(int)), ui->frequencySlider, SLOT(setValue(int)));
+    connect(ui->frequencySlider,SIGNAL(valueChanged(int)),this,SLOT(notifyFrequencyIntValueChanged(int)));
+    connect(this, SIGNAL(doubleFrequencyValueChanged(double)), ui->frequencySpinBox, SLOT(setValue(double)));
+    connect(ui->frequencySpinBox,SIGNAL(valueChanged(double)),this, SLOT(setFrequency(double)));
+
     QPixmap mypix (":/resources/schematic.png");
     ui->schematic->setScaledContents(true);
     ui->schematic->setPixmap(mypix);
@@ -152,28 +168,27 @@ void MainWindow::createActions() {
 void MainWindow::on_btn_earthquake_clicked()
 {
     m_TFunctionCalc.earthquakeRecord();
+    ui->groupBox_frequency->hide();
     updatePlots();
 }
 void MainWindow::on_btn_sine_clicked()
 {
     m_TFunctionCalc.sinRecord();
+    ui->groupBox_frequency->show();
     updatePlots();
 }
 
-void MainWindow::on_btn_cos_clicked()
-{
-    m_TFunctionCalc.cosRecord();
-    updatePlots();
-}
 void MainWindow::on_btn_sweep_clicked()
 {
     m_TFunctionCalc.sweepRecord();
+    ui->groupBox_frequency->hide();
     updatePlots();
 }
 
 void MainWindow::on_loadMotion_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this);
+    ui->groupBox_frequency->hide();
     if (!fileName.isEmpty())
         loadFile(fileName);
     updatePlots();
@@ -355,6 +370,14 @@ void MainWindow::setVs(double Vs)
     m_TFunctionCalc.calculate();
     updatePlots();
 }
+
+void MainWindow::setFrequency(double f)
+{
+    m_TFunctionCalc.sinRecord(f);
+    m_TFunctionCalc.calculate();
+    updatePlots();
+}
+
 
 void MainWindow::updatePlots()
 {

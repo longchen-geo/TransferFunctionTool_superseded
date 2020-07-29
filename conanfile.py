@@ -18,8 +18,6 @@ class transFunConan(ConanFile):
         if self.settings.os == "Windows":
             self.build_requires("jom_installer/1.1.2@bincrafters/stable")
 
-
-
     def package_id(self):
         del self.info.options.withQt
 
@@ -41,10 +39,6 @@ class transFunConan(ConanFile):
         self.run(qmakeCommand, run_environment=True) 
         self.run(makeCommand, run_environment=True) 
    
-
-    def package_info(self):
-        self.cpp_info.libs = ["s3hark"]
-
     def imports(self):
         if self.settings.os == "Windows":
             output = './%s' % self.settings.build_type

@@ -181,33 +181,16 @@ QVector<double> TFunctionCalc::getIFft()
     return m_absIFft;
 }
 
-void TFunctionCalc::sinRecord()
+void TFunctionCalc::sinRecord(double f)
 {
     int nPoints = 2000;
-    m_dt = 0.02;
+    m_dt = 0.002;
     m_acc.resize(nPoints);
     QVector<double> accel;
 
     for (double s=0.;s<=nPoints * m_dt; s+=m_dt)
     {
-        accel.append(0.4 * sin(2 * PI * s));
-    }
-    m_acc = accel;
-    setTime();
-    setFreq();
-    calculate();
-}
-
-void TFunctionCalc::cosRecord()
-{
-    int nPoints = 2000;
-    m_dt = 0.02;
-    m_acc.resize(nPoints);
-    QVector<double> accel;
-
-    for (double s=0.;s<=nPoints * m_dt; s+=m_dt)
-    {
-        accel.append(0.4 * cos(2 * PI * s));
+        accel.append(0.4 * sin(2 * f * PI * s));
     }
     m_acc = accel;
     setTime();
@@ -241,6 +224,7 @@ void TFunctionCalc::readGM(QJsonArray accTH, double dT, double accUnit)
     for (int ii = 0; ii < nPoints; ii++){
         m_acc.append(accTH[ii].toDouble() * accUnit);
     }
+    if (nPoints % 2 == 0) m_acc.append(0.0);
     setTime();
     setFreq();
     calculate();

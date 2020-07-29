@@ -25,15 +25,17 @@ signals:
     void intHsValueChanged(int intValue);
     void doubleDampingValueChanged(double doubleValue);
     void intDampingValueChanged(int intValue);
+    void doubleFrequencyValueChanged(double doubleValue);
+    void intFrequencyValueChanged(int intValue);
 
 private slots:
     void setDamping(double damping);
     void setVs(double Vs);
     void setHs(double H);
+    void setFrequency(double f);
     void on_loadMotion_clicked();
     void on_btn_earthquake_clicked();
     void on_btn_sine_clicked();
-    void on_btn_cos_clicked();
     void on_btn_sweep_clicked();
 
     void notifyVsIntValueChanged(int value) {
@@ -64,6 +66,16 @@ private slots:
     void notifyDampingDoubleValueChanged(double value) {
          int intValue = value * 100;
          emit intDampingValueChanged(intValue);
+     }
+
+    void notifyFrequencyIntValueChanged(int value) {
+         double doubleValue = value / 100.0;
+         emit doubleFrequencyValueChanged(doubleValue);
+     }
+
+    void notifyFrequencyDoubleValueChanged(double value) {
+         int intValue = value * 100;
+         emit intFrequencyValueChanged(intValue);
      }
 
     /*
