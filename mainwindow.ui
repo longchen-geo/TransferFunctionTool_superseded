@@ -427,7 +427,7 @@
                <property name="title">
                 <string>Motion Selection</string>
                </property>
-               <widget class="QCheckBox" name="btn_earthquake">
+               <widget class="QRadioButton" name="btn_earthquake">
                 <property name="geometry">
                  <rect>
                   <x>20</x>
@@ -452,11 +452,8 @@
                  <string>Example Earthquake
 Record</string>
                 </property>
-                <attribute name="buttonGroup">
-                 <string notr="true">buttonGroup</string>
-                </attribute>
                </widget>
-               <widget class="QCheckBox" name="btn_sine">
+               <widget class="QRadioButton" name="btn_sine">
                 <property name="geometry">
                  <rect>
                   <x>20</x>
@@ -480,11 +477,8 @@ Record</string>
                 <property name="text">
                  <string>Sine</string>
                 </property>
-                <attribute name="buttonGroup">
-                 <string notr="true">buttonGroup</string>
-                </attribute>
                </widget>
-               <widget class="QCheckBox" name="btn_sweep">
+               <widget class="QRadioButton" name="btn_sweep">
                 <property name="geometry">
                  <rect>
                   <x>20</x>
@@ -508,14 +502,11 @@ Record</string>
                 <property name="text">
                  <string>Frequency Sweep</string>
                 </property>
-                <attribute name="buttonGroup">
-                 <string notr="true">buttonGroup</string>
-                </attribute>
                </widget>
-               <widget class="QPushButton" name="loadMotion">
+               <widget class="QRadioButton" name="loadMotion">
                 <property name="geometry">
                  <rect>
-                  <x>50</x>
+                  <x>20</x>
                   <y>120</y>
                   <width>100</width>
                   <height>23</height>
@@ -632,7 +623,7 @@ Record</string>
      <x>0</x>
      <y>0</y>
      <width>900</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>
