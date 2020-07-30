@@ -48,3 +48,17 @@ ui_*.h
 
 *.swp
 *.dmg
+
+conanbuildinfo.txt
+
+conaninfo.txt
+
+conanbuildinfo.cmake
+
+conan.lock
+
+conanbuildinfo.pri
+
+Makefile
+
+graph_info.json

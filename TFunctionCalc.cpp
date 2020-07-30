@@ -238,6 +238,8 @@ void TFunctionCalc::earthquakeRecord(){
     m_acc.resize(nPoints);
     QVector<double> accel(nPoints);
 
+    //QFile *f = new QFile(':/resources/motions/earthquake.txt');
+
     //Predifined Acceleration time history
     accel[ 0] = -20.540;
     accel[ 1] = -10.200;

@@ -43,19 +43,19 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_12">
        <property name="spacing">
-        <number>3</number>
+        <number>0</number>
        </property>
        <property name="leftMargin">
-        <number>6</number>
+        <number>0</number>
        </property>
        <property name="topMargin">
-        <number>6</number>
+        <number>0</number>
        </property>
        <property name="rightMargin">
-        <number>6</number>
+        <number>0</number>
        </property>
        <property name="bottomMargin">
-        <number>6</number>
+        <number>0</number>
        </property>
        <item>
         <widget class="QFrame" name="gridFrame">
@@ -65,7 +65,7 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout">
+         <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0">
           <property name="sizeConstraint">
            <enum>QLayout::SetDefaultConstraint</enum>
           </property>
@@ -237,16 +237,16 @@
             </property>
             <layout class="QVBoxLayout" name="verticalLayout">
              <property name="leftMargin">
-              <number>2</number>
+              <number>6</number>
              </property>
              <property name="topMargin">
-              <number>2</number>
+              <number>6</number>
              </property>
              <property name="rightMargin">
-              <number>2</number>
+              <number>6</number>
              </property>
              <property name="bottomMargin">
-              <number>2</number>
+              <number>6</number>
              </property>
              <item>
               <widget class="QGroupBox" name="groupBox_Vs">
@@ -265,41 +265,31 @@
                <property name="title">
                 <string>Shear Wave Velocity [m/sec]:</string>
                </property>
-               <widget class="QSlider" name="vsSlider">
-                <property name="geometry">
-                 <rect>
-                  <x>13</x>
-                  <y>50</y>
-                  <width>181</width>
-                  <height>21</height>
-                 </rect>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
-               <widget class="QDoubleSpinBox" name="vsSpinBox">
-                <property name="geometry">
-                 <rect>
-                  <x>50</x>
-                  <y>20</y>
-                  <width>84</width>
-                  <height>20</height>
-                 </rect>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-               </widget>
+               <layout class="QVBoxLayout" name="verticalLayout_6">
+                <item>
+                 <widget class="QDoubleSpinBox" name="vsSpinBox">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSlider" name="vsSlider">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </widget>
              </item>
              <item>
@@ -319,41 +309,31 @@
                <property name="title">
                 <string>Thickness [m]:</string>
                </property>
-               <widget class="QDoubleSpinBox" name="thicknessSpinBox">
-                <property name="geometry">
-                 <rect>
-                  <x>50</x>
-                  <y>20</y>
-                  <width>84</width>
-                  <height>20</height>
-                 </rect>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-               </widget>
-               <widget class="QSlider" name="thicknessSlider">
-                <property name="geometry">
-                 <rect>
-                  <x>13</x>
-                  <y>50</y>
-                  <width>181</width>
-                  <height>21</height>
-                 </rect>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
+               <layout class="QVBoxLayout" name="verticalLayout_4">
+                <item>
+                 <widget class="QDoubleSpinBox" name="thicknessSpinBox">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSlider" name="thicknessSlider">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </widget>
              </item>
              <item>
@@ -373,41 +353,31 @@
                <property name="title">
                 <string>Damping [%]:</string>
                </property>
-               <widget class="QDoubleSpinBox" name="dampingSpinBox">
-                <property name="geometry">
-                 <rect>
-                  <x>50</x>
-                  <y>20</y>
-                  <width>84</width>
-                  <height>20</height>
-                 </rect>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-               </widget>
-               <widget class="QSlider" name="dampingSlider">
-                <property name="geometry">
-                 <rect>
-                  <x>13</x>
-                  <y>50</y>
-                  <width>181</width>
-                  <height>21</height>
-                 </rect>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
+               <layout class="QVBoxLayout" name="verticalLayout_2">
+                <item>
+                 <widget class="QDoubleSpinBox" name="dampingSpinBox">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSlider" name="dampingSlider">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </widget>
              </item>
              <item>
@@ -427,107 +397,111 @@
                <property name="title">
                 <string>Motion Selection</string>
                </property>
-               <widget class="QRadioButton" name="btn_earthquake">
-                <property name="geometry">
-                 <rect>
-                  <x>20</x>
-                  <y>20</y>
-                  <width>150</width>
-                  <height>30</height>
-                 </rect>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>150</width>
-                  <height>30</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Example Earthquake
+               <layout class="QGridLayout" name="gridLayout">
+                <item row="4" column="2">
+                 <widget class="QPushButton" name="pushButton">
+                  <property name="text">
+                   <string>load</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="1">
+                 <widget class="QLineEdit" name="userMotionFile"/>
+                </item>
+                <item row="4" column="0">
+                 <spacer name="horizontalSpacer">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Minimum</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="3" column="0" colspan="3">
+                 <widget class="QRadioButton" name="loadMotion">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>100</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Load User Motion</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0" colspan="3">
+                 <widget class="QRadioButton" name="btn_sweep">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>150</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Frequency Sweep</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0" colspan="3">
+                 <widget class="QRadioButton" name="btn_sine">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>80</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Sine</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0" colspan="3">
+                 <widget class="QRadioButton" name="btn_earthquake">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>150</width>
+                    <height>30</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Example Earthquake
 Record</string>
-                </property>
-               </widget>
-               <widget class="QRadioButton" name="btn_sine">
-                <property name="geometry">
-                 <rect>
-                  <x>20</x>
-                  <y>60</y>
-                  <width>109</width>
-                  <height>17</height>
-                 </rect>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>80</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Sine</string>
-                </property>
-               </widget>
-               <widget class="QRadioButton" name="btn_sweep">
-                <property name="geometry">
-                 <rect>
-                  <x>20</x>
-                  <y>90</y>
-                  <width>150</width>
-                  <height>17</height>
-                 </rect>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>150</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Frequency Sweep</string>
-                </property>
-               </widget>
-               <widget class="QRadioButton" name="loadMotion">
-                <property name="geometry">
-                 <rect>
-                  <x>20</x>
-                  <y>120</y>
-                  <width>100</width>
-                  <height>23</height>
-                 </rect>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Load Motion</string>
-                </property>
-               </widget>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </widget>
              </item>
              <item>
@@ -547,35 +521,37 @@ Record</string>
                <property name="title">
                 <string>Frequency</string>
                </property>
-               <widget class="QDoubleSpinBox" name="frequencySpinBox">
-                <property name="geometry">
-                 <rect>
-                  <x>51</x>
-                  <y>20</y>
-                  <width>91</width>
-                  <height>22</height>
-                 </rect>
-                </property>
-               </widget>
-               <widget class="QSlider" name="frequencySlider">
-                <property name="geometry">
-                 <rect>
-                  <x>20</x>
-                  <y>50</y>
-                  <width>160</width>
-                  <height>22</height>
-                 </rect>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
+               <layout class="QVBoxLayout" name="verticalLayout_7">
+                <item>
+                 <widget class="QDoubleSpinBox" name="frequencySpinBox"/>
+                </item>
+                <item>
+                 <widget class="QSlider" name="frequencySlider">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>6</height>
+                </size>
+               </property>
+              </spacer>
              </item>
              <item>
               <widget class="QLabel" name="schematic">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -588,8 +564,8 @@ Record</string>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>200</width>
-                 <height>200</height>
+                 <width>500</width>
+                 <height>500</height>
                 </size>
                </property>
                <property name="frameShape">
@@ -623,7 +599,7 @@ Record</string>
      <x>0</x>
      <y>0</y>
      <width>900</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
@@ -638,7 +614,4 @@ Record</string>
  </customwidgets>
  <resources/>
  <connections/>
- <buttongroups>
-  <buttongroup name="buttonGroup"/>
- </buttongroups>
 </ui>
