@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
 
     MainWindow w;
     w.setWindowTitle("Transfer Function Tool");
+    QApplication::setWindowIcon(QIcon(":/resources/NHERI-TFT-Icon.icns"));
     w.show();
     return a.exec();
 }

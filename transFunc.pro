@@ -1,22 +1,12 @@
 include($$PWD/ConanHelper.pri)
 
 QT       += core gui webchannel
+unix: QT += svg opengl concurrent
+win32: QT += opengl printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
-
-SOURCES += \
-    MainWindow.cpp \
-    TFunctionCalc.cpp \
-    main.cpp
-
-HEADERS += \
-    MainWindow.h \
-    TFunctionCalc.h
-
-FORMS += \
-    MainWindow.ui
 
 win32: {
     RC_ICONS = resources/transFunc_icon.ico
@@ -29,13 +19,8 @@ LIBS +=    -lmkl_core -lmkl_intel_ilp64 -lmkl_intel_lp64 -lmkl_sequential
 
 include(../SimCenterCommon/Common/Common.pri)
 include(../SimCenterCommon/SimFigure/SimFigure.pri)
+
 include(./conanhelper.pri)
-win32: {
-    include(C:\qwt-6.1.5\features\qwt.prf)
-}
-macos: {
-    include(/usr/local/qwt-6.1.5/features/qwt.prf)
-}
 
 win32: include(C:\qwt-6.1.5\features\qwt.prf)
 unix: include(/usr/local/qwt-6.1.4/features/qwt.prf)
