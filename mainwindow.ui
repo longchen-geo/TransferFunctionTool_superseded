@@ -399,9 +399,9 @@
                </property>
                <layout class="QGridLayout" name="gridLayout">
                 <item row="4" column="2">
-                 <widget class="QPushButton" name="pushButton">
+                 <widget class="QPushButton" name="loadMotion">
                   <property name="text">
-                   <string>load</string>
+                   <string>Load</string>
                   </property>
                  </widget>
                 </item>
@@ -425,7 +425,7 @@
                  </spacer>
                 </item>
                 <item row="3" column="0" colspan="3">
-                 <widget class="QRadioButton" name="loadMotion">
+                 <widget class="QRadioButton" name="btn_loadMotion">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -492,12 +492,11 @@
                   <property name="minimumSize">
                    <size>
                     <width>150</width>
-                    <height>30</height>
+                    <height>0</height>
                    </size>
                   </property>
                   <property name="text">
-                   <string>Example Earthquake
-Record</string>
+                   <string>Example Earthquake Record</string>
                   </property>
                  </widget>
                 </item>
@@ -558,14 +557,14 @@ Record</string>
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>200</width>
-                 <height>0</height>
+                 <width>100</width>
+                 <height>100</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>500</width>
-                 <height>500</height>
+                 <width>300</width>
+                 <height>300</height>
                 </size>
                </property>
                <property name="frameShape">
@@ -599,7 +598,7 @@ Record</string>
      <x>0</x>
      <y>0</y>
      <width>900</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -608,7 +607,7 @@ Record</string>
   <customwidget>
    <class>SimFigure</class>
    <extends>QFrame</extends>
-   <header>./source/simfigure.h</header>
+   <header location="global">./source/simfigure.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

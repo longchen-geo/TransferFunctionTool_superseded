@@ -10,7 +10,7 @@ class transFunConan(ConanFile):
     description = "A Tool to Visualize Transfer Function"
     settings = "os", "compiler", "build_type", "arch"
     generators = "qmake", "cmake"
-    requires = "mkl-include/2019.4@simcenter/stable", "SimCenterCommonQt/0.1.1@simcenter/testing", "mkl-static/2019.4@simcenter/stable"
+    requires = "mkl-include/2019.4@simcenter/stable", "SimCenterCommonQt/0.1.10@simcenter/testing", "mkl-static/2019.4@simcenter/stable"
     build_policy = "missing"
 
 

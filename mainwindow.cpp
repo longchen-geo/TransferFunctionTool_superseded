@@ -1,5 +1,9 @@
-#include "MainWindow.h"
-#include "ui_MainWindow.h"
+#include "mainwindow.h"
+#if defined(WIN32)
+    #include "C:\SourceCode\SimCenter\build-transFunc-Desktop_Qt_5_14_2_MSVC2017_64bit-Release\Release\.ui\ui_mainwindow.h"
+#else
+    #include "ui_mainwindow.h"
+#endif
 
 #include <QRect>
 #include <QGuiApplication>
@@ -19,7 +23,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonDocument>
-#include "Utils/dialogabout.h"
+#include "dialogabout.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -84,7 +88,7 @@ MainWindow::MainWindow(QWidget *parent)
     double frequency = 5.0;
     double max_frequency = 30.0;
     m_TFunctionCalc = TFunctionCalc(damping, Hs, Vs);
-    updatePlots();
+    // updatePlots();
 
     // ------------------------------------------------------------------------
     // Controls Boxes
@@ -131,16 +135,22 @@ MainWindow::MainWindow(QWidget *parent)
     ui->frequencySpinBox->setRange(0.01, max_frequency);
     ui->frequencySpinBox->setValue(frequency);
     ui->frequencySpinBox->setSingleStep(0.01);
+    ui->frequencySpinBox->setReadOnly(true);
+    ui->frequencySpinBox->setStyleSheet("QDoubleSpinBox {background-color: lightGray; color: white;}");
 
     ui->frequencySlider->setRange(50, max_frequency * 100);
     ui->frequencySlider->setValue(frequency * 100);
-    ui->groupBox_frequency->hide();
+    ui->frequencySlider->setEnabled(false);
 
     connect(ui->frequencySpinBox, SIGNAL(valueChanged(double)),this,SLOT(notifyFrequencyDoubleValueChanged(double)));
     connect(this, SIGNAL(intFrequencyValueChanged(int)), ui->frequencySlider, SLOT(setValue(int)));
     connect(ui->frequencySlider,SIGNAL(valueChanged(int)),this,SLOT(notifyFrequencyIntValueChanged(int)));
     connect(this, SIGNAL(doubleFrequencyValueChanged(double)), ui->frequencySpinBox, SLOT(setValue(double)));
     connect(ui->frequencySpinBox,SIGNAL(valueChanged(double)),this, SLOT(setFrequency(double)));
+
+    ui->loadMotion->setEnabled(false);
+    ui->userMotionFile->setReadOnly(true);
+    ui->userMotionFile->setStyleSheet("QLineEdit {background-color: lightGray; color: white;}");
 
     QPixmap mypix (":/resources/schematic.png");
     ui->schematic->setScaledContents(true);
@@ -149,6 +159,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->createActions();
 
     ui->btn_earthquake->setChecked(true);
+    loadFile(":/resources/motions/motion.json");
+    updatePlots();
 }
 
 MainWindow::~MainWindow()
@@ -167,31 +179,51 @@ void MainWindow::createActions() {
 
 void MainWindow::on_btn_earthquake_clicked()
 {
-    m_TFunctionCalc.earthquakeRecord();
-    ui->groupBox_frequency->hide();
+    ui->frequencySpinBox->setReadOnly(true);
+    ui->frequencySpinBox->setStyleSheet("QDoubleSpinBox {background-color: lightGray; color: white;}");
+    ui->frequencySlider->setEnabled(false);
+    ui->loadMotion->setEnabled(false);
+    loadFile(":/resources/motions/motion.json");
     updatePlots();
 }
 void MainWindow::on_btn_sine_clicked()
 {
     m_TFunctionCalc.sinRecord();
-    ui->groupBox_frequency->show();
+    ui->frequencySpinBox->setReadOnly(false);
+    ui->frequencySpinBox->setStyleSheet("QDoubleSpinBox {background-color: white; color: black;}");
+    ui->frequencySlider->setEnabled(true);
+    ui->loadMotion->setEnabled(false);
     updatePlots();
 }
 
 void MainWindow::on_btn_sweep_clicked()
 {
     m_TFunctionCalc.sweepRecord();
-    ui->groupBox_frequency->hide();
+    ui->frequencySpinBox->setReadOnly(true);
+    ui->frequencySpinBox->setStyleSheet("QDoubleSpinBox {background-color: lightGray; color: white;}");
+    ui->frequencySlider->setEnabled(false);
+    ui->loadMotion->setEnabled(false);
     updatePlots();
+}
+
+void MainWindow::on_btn_loadMotion_clicked()
+{
+   ui->loadMotion->setEnabled(true);
+   ui->userMotionFile->setReadOnly(false);
+   ui->userMotionFile->setReadOnly(false);
+   ui->userMotionFile->setStyleSheet("QLineEdit {background-color: white; color: black;}");
 }
 
 void MainWindow::on_loadMotion_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this);
-    ui->groupBox_frequency->hide();
+    ui->frequencySpinBox->setReadOnly(true);
+    ui->frequencySpinBox->setStyleSheet("QDoubleSpinBox {background-color: lightGray; color: white;}");
+    ui->frequencySlider->setEnabled(false);
     if (!fileName.isEmpty())
         loadFile(fileName);
     updatePlots();
+    ui->userMotionFile->setText(fileName);
 }
 
 void MainWindow::loadFile(const QString &fileName)
@@ -229,13 +261,13 @@ void MainWindow::loadFile(const QString &fileName)
         QJsonObject units = events[0].toObject()["units"].toObject();
         double accUnit = 1.0;
         if(!units.isEmpty()){
-            QString lengthType = units["acc"].toString();
-            if (lengthType=="g")
-                accUnit = 9.81;
-            else if (lengthType=="m/s2")
+            QString accType = units["acc"].toString();
+            if (accType=="g")
                 accUnit = 1.0;
-            else if (lengthType=="cm/s2")
-                accUnit = 0.01;
+            else if (accType=="m/s2")
+                accUnit = 1.0 / 9.81;
+            else if (accType=="cm/s2" || accType=="gal" || accType=="Gal")
+                accUnit = 1.0 / 981.0;
         }
         double dT = timeseries[0].toObject()["dT"].toDouble();
         QJsonArray accTH = timeseries[0].toObject()["data"].toArray();

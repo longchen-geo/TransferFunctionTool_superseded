@@ -37,6 +37,7 @@ private slots:
     void on_btn_earthquake_clicked();
     void on_btn_sine_clicked();
     void on_btn_sweep_clicked();
+    void on_btn_loadMotion_clicked();
 
     void notifyVsIntValueChanged(int value) {
          double doubleValue = value / 10.0;

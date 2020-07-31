@@ -24,7 +24,6 @@ public:
     void setDamping(double damping);
     void setHs(double H);
     void setVs(double Vs);
-    void earthquakeRecord();
     void sinRecord(double frequency = 5.0);
     void sweepRecord();
     void readGM(QJsonArray accTH, double dT, double accUnit);

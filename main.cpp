@@ -1,4 +1,4 @@
-#include "MainWindow.h"
+#include "mainwindow.h"
 
 #include <QApplication>
 #include <QDir>
@@ -11,9 +11,9 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    QCoreApplication::setApplicationName("transFunc");
+    QCoreApplication::setApplicationName("NHERI-TFT");
     QCoreApplication::setOrganizationName("SimCenter");
-    QCoreApplication::setApplicationVersion("0.0");
+    QCoreApplication::setApplicationVersion("0.9");
 
     MainWindow w;
     w.setWindowTitle("Transfer Function Tool");
