@@ -6,9 +6,9 @@
 
 APP=transFunc
 QWT_FRAMEWORK=qwt.framework
-QWT_FRAMEWORK_PATH=/usr/local/qwt-6.1.4/lib/
+QWT_FRAMEWORK_PATH=/usr/local/qwt-6.1.5/lib/
 
-QT_DEPLOY=/Users/pmackenz/Qt/5.14.2/clang_64/bin/macdeployqt
+QT_DEPLOY=/Users/long/Qt/5.14.2/clang_64/bin/macdeployqt
 #
 # ---- do not change anything below this line -----------------------------------
 #
