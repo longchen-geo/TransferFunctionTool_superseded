@@ -1,9 +1,13 @@
 #include "mainwindow.h"
-#if defined(WIN32)
-    #include "C:\SourceCode\SimCenter\build-transFunc-Desktop_Qt_5_14_2_MSVC2017_64bit-Release\Release\.ui\ui_mainwindow.h"
-#else
-    #include "ui_mainwindow.h"
-#endif
+// there was a confliction in ui_mainwindow.h that also exists in SimCenterCommon package
+// #if defined(WIN32) && defined(NDEBUG)
+//     #include "..\build-transFunc-Desktop_Qt_5_14_2_MSVC2017_64bit-Release\Release\.ui\ui_mainwindow.h"
+// #elif defined(WIN32) && !defined(NDEBUG)
+//     #include "..\build-transFunc-Desktop_Qt_5_14_2_MSVC2017_64bit-Debug\Debug\.ui\ui_mainwindow.h"
+// #else
+//     #include "ui_mainwindow.h"
+// #endif
+#include "ui_mainwindow.h"
 
 #include <QRect>
 #include <QGuiApplication>
@@ -23,7 +27,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonDocument>
-#include "dialogabout.h"
+#include "Utils/dialogabout.h"
 
 
 MainWindow::MainWindow(QWidget *parent)

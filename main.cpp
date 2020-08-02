@@ -14,6 +14,8 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("NHERI-TFT");
     QCoreApplication::setOrganizationName("SimCenter");
     QCoreApplication::setApplicationVersion("0.9");
+    // window scaling
+    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     MainWindow w;
     w.setWindowTitle("Transfer Function Tool");

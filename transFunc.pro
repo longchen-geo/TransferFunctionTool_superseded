@@ -11,9 +11,10 @@ unix:    ICON = resources/NHERI-TFT-Icon.icns
 
 LIBS +=    -lmkl_core -lmkl_intel_ilp64 -lmkl_intel_lp64 -lmkl_sequential
 
+include(../SimCenterCommon/Common/Common.pri)
 include(../SimCenterCommon/SimFigure/SimFigure.pri)
 
-include(./ConanHelper.pri)
+include($$PWD/ConanHelper.pri)
 
 win32: include(C:\qwt-6.1.5\features\qwt.prf)
 unix: include(/usr/local/qwt-6.1.5/features/qwt.prf)
