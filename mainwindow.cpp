@@ -37,8 +37,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     QRect rec = QGuiApplication::primaryScreen()->geometry();
-    int height = this->height()<int(0.35*rec.height())?int(0.35*rec.height()):this->height();
-    int width  = this->width()<int(0.35*rec.width())?int(0.35*rec.width()):this->width();
+    int height = this->height()<int(0.80*rec.height())?int(0.80*rec.height()):this->height();
+    int width  = this->width()<int(0.50*rec.width())?int(0.50*rec.width()):this->width();
     this->resize(width, height);
 
     //
@@ -427,17 +427,23 @@ void MainWindow::updatePlots()
 
     ui->AccOFig->clear();
     ui->AccOFig->plot(m_time, m_accOutput, SimFigure::LineType::Solid, Qt::blue);
+    ui->AccOFig->setLabelFontSize(8);
 
     ui->FOFig->clear();
     ui->FOFig->plot(m_freq, m_absIFft, SimFigure::LineType::Solid, Qt::black);
+    ui->FOFig->setLabelFontSize(8);
 
     ui->HFig->clear();
     ui->HFig->plot(m_freq, m_soilTF, SimFigure::LineType::Solid, Qt::red);
+    ui->HFig->setLabelFontSize(8);
 
     ui->FIFig->clear();
     ui->FIFig->plot(m_freq, m_absFft, SimFigure::LineType::Solid, Qt::black);
+    ui->FIFig->setLabelFontSize(8);
 
     ui->AccIFig->clear();
     ui->AccIFig->plot(m_time, m_accInput, SimFigure::LineType::Solid, Qt::blue);
+    ui->AccIFig->setLabelFontSize(8);
+
 
 }
