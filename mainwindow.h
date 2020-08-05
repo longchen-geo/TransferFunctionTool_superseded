@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <simfigure.h>
+#include "C:\SourceCode\SimCenter\SimCenterCommon_fork\SimFigure\source\simfigure.h"
 #include "TFunctionCalc.h"
 
 
@@ -89,6 +89,8 @@ private slots:
     void about();
     void version();
     void copyright();
+
+    void on_MotionSelectioncomboBox_currentIndexChanged(int index);
 
 private:
     Ui::MainWindow *ui;

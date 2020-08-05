@@ -1,12 +1,13 @@
-#include "TFunctionCalc.h"
-#include <mkl_dfti.h>
+#define _USE_MATH_DEFINES
 
-#define PI 3.141592653590
+#include "TFunctionCalc.h"
+#include <cmath>
+#include <mkl_dfti.h>
 
 TFunctionCalc::TFunctionCalc(double damping, double H, double Vs)
 {
     //Define soil layer parameters
-    m_damping = damping / 100.0;
+    m_damping = damping / 100.0; // damping from percentage to number
     m_H = H;
     m_Vs = Vs;
 }
@@ -68,10 +69,10 @@ void TFunctionCalc::calcSoilTf(QVector<std::complex<double>>& tf)
          *       cos ( 2* PI * freq * H / (Vs(1+ i*damping))
          *
          */
-         kstar = std::complex<double>(2.0*PI*m_freq[i]/m_Vs, -m_damping*2.0*PI*m_freq[i]/m_Vs);
+         kstar = std::complex<double>(2.0 * M_PI * m_freq[i] / m_Vs, -m_damping * 2.0 * M_PI * m_freq[i] / m_Vs);
          Vsstar = std::complex<double>(m_Vs, m_damping * m_Vs);
          //tf[i] = 1.0/cos(kstar*H);
-         tf[i] = 1.0/cos(2.0*PI*m_freq[i]*m_H/Vsstar);
+         tf[i] = 1.0/cos(2.0 * M_PI * m_freq[i] *m_H /Vsstar);
     }
 }
 
@@ -105,15 +106,14 @@ void TFunctionCalc::ifft(QVector<std::complex<double>> fas, QVector<double>& ts)
 }
 
 
-void TFunctionCalc::setFreq(double maxFreq)
+void TFunctionCalc::setFreq()
 {
-    QVector<double> freq(m_acc.size()/2+1);
+    m_freq.resize(m_acc.size()/2+1);
     // double dfreq = 1 / ( 2 * m_dt * (freq.size() - 1 ) );
-    double dfreq = maxFreq / freq.size();
-    for (int i = 0; i < freq.size(); i++ ) {
-        freq[i] = i * dfreq;
+    double sampleFreq = 1.0 / m_dt;
+    for (int i = 0; i < m_freq.size(); i++ ) {
+        m_freq[i] = i * sampleFreq / m_acc.size();
     }
-    m_freq = freq;
 }
 
 void TFunctionCalc::setTime()
@@ -178,13 +178,13 @@ QVector<double> TFunctionCalc::getIFft()
 void TFunctionCalc::sinRecord(double f)
 {
     int nPoints = 2000;
-    m_dt = 0.002;
+    m_dt = 0.02;
     m_acc.resize(nPoints);
     QVector<double> accel;
 
     for (double s=0.;s<=nPoints * m_dt; s+=m_dt)
     {
-        accel.append(0.4 * sin(2 * f * PI * s));
+        accel.append(0.4 * sin(2 * f * M_PI * s));
     }
     m_acc = accel;
     setTime();
@@ -196,17 +196,17 @@ void TFunctionCalc::sweepRecord()
 {
     int nPoints = 8000;
     double time;
-    m_dt = 0.005;
+    m_dt = 0.002;
     m_acc.resize(nPoints);
     m_time.resize(nPoints);
 
     for (int i=0; i<m_time.size();i++){
         time = i * m_dt;
         m_time[i]= time;
-        m_acc[i] = sin(50.0 * time + 500.0 * (time * time / 2.0) / 40.0);
+        m_acc[i] = sin(25.0 * time + 150.0 * (time * time / 2.0) / 16.0);
     }
 
-    setFreq(10.0);
+    setFreq();
     calculate();
 }
 

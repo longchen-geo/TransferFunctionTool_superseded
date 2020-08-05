@@ -19,7 +19,7 @@ public:
     void calculate();
     void calculateRS();
 
-    void setFreq(double maxFreq = 25.0);
+    void setFreq();
     void setTime();
     void setDamping(double damping);
     void setHs(double H);

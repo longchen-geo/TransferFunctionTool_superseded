@@ -21,6 +21,7 @@
 #include <QDesktopServices>
 #include <QUrl>
 #include <QDoubleSpinBox>
+#include <QtDebug>
 #include <QLabel>
 #include <QFileDialog>
 #include <QDesktopWidget>
@@ -28,6 +29,11 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include "Utils/dialogabout.h"
+
+#include <algorithm>
+
+#define MIN(vec) *std::min_element(vec.constBegin(), vec.constEnd())
+#define MAX(vec) *std::max_element(vec.constBegin(), vec.constEnd())
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -52,35 +58,35 @@ MainWindow::MainWindow(QWidget *parent)
 
     // ------------------------------------------------------------------------
     // Add figures
-    ui->AccOFig->showAxisControls(false);
-    ui->AccOFig->setMinimumHeight(150);
-    ui->AccOFig->setXLabel("Time [s]");
-    ui->AccOFig->setYLabel("Accel. [g]");
-    ui->AccOFig->setLabelFontSize(8);
+    ui->AccOutputFig->showAxisControls(false);
+    // ui->AccOutputFig->setMinimumHeight(150);
+    ui->AccOutputFig->setXLabel("Time [s]");
+    ui->AccOutputFig->setYLabel("Accel. [g]");
+    ui->AccOutputFig->setLabelFontSize(8);
 
-    ui->FOFig->showAxisControls(false);
-    ui->FOFig->setMinimumHeight(150);
-    ui->FOFig->setXLabel("Freq. [Hz]");
-    ui->FOFig->setYLabel("FA [g-s]");
-    ui->FOFig->setLabelFontSize(8);
+    ui->FourierOutputFig->showAxisControls(false);
+    // ui->FourierOutputFig->setMinimumHeight(150);
+    ui->FourierOutputFig->setXLabel("Freq. [Hz]");
+    ui->FourierOutputFig->setYLabel("FA [g-s]");
+    ui->FourierOutputFig->setLabelFontSize(8);
 
-    ui->HFig->showAxisControls(false);
-    ui->HFig->setMinimumHeight(150);
-    ui->HFig->setXLabel("Freq. [Hz]");
-    ui->HFig->setYLabel("[H]");
-    ui->HFig->setLabelFontSize(8);
+    ui->TransferFunctionFig->showAxisControls(false);
+    // ui->TransferFunctionFig->setMinimumHeight(150);
+    ui->TransferFunctionFig->setXLabel("Freq. [Hz]");
+    ui->TransferFunctionFig->setYLabel("[H]");
+    ui->TransferFunctionFig->setLabelFontSize(8);
 
-    ui->FIFig->showAxisControls(false);
-    ui->FIFig->setMinimumHeight(150);
-    ui->FIFig->setXLabel("Freq. [Hz]");
-    ui->FIFig->setYLabel("FA [g-s]");
-    ui->FIFig->setLabelFontSize(8);
+    ui->FourierInputFig->showAxisControls(false);
+    // ui->FourierInputFig->setMinimumHeight(150);
+    ui->FourierInputFig->setXLabel("Freq. [Hz]");
+    ui->FourierInputFig->setYLabel("FA [g-s]");
+    ui->FourierInputFig->setLabelFontSize(8);
 
-    ui->AccIFig->showAxisControls(false);
-    ui->AccIFig->setMinimumHeight(150);
-    ui->AccIFig->setXLabel("Time [s]");
-    ui->AccIFig->setYLabel("Accel. [g]");
-    ui->AccIFig->setLabelFontSize(8);
+    ui->AccInputFig->showAxisControls(false);
+    // ui->AccInputFig->setMinimumHeight(150);
+    ui->AccInputFig->setXLabel("Time [s]");
+    ui->AccInputFig->setYLabel("Accel. [g]");
+    ui->AccInputFig->setLabelFontSize(8);
 
     // initial values
     double damping = 10;
@@ -92,7 +98,6 @@ MainWindow::MainWindow(QWidget *parent)
     double frequency = 5.0;
     double max_frequency = 30.0;
     m_TFunctionCalc = TFunctionCalc(damping, Hs, Vs);
-    // updatePlots();
 
     // ------------------------------------------------------------------------
     // Controls Boxes
@@ -156,14 +161,18 @@ MainWindow::MainWindow(QWidget *parent)
     ui->userMotionFile->setReadOnly(true);
     ui->userMotionFile->setStyleSheet("QLineEdit {background-color: lightGray; color: white;}");
 
+    ui->MotionSelectioncomboBox->addItems({"Motion 1", "Motion 2", "Motion 3", "Motion 4"});
+    ui->MotionSelectioncomboBox->setCurrentIndex(0);
+
     QPixmap mypix (":/resources/schematic.png");
-    ui->schematic->setScaledContents(true);
-    ui->schematic->setPixmap(mypix);
+    int w = ui->schematic->width();
+    int h = ui->schematic->height();
+    ui->schematic->setPixmap(mypix.scaled(1.5 * w, 1.5 * h, Qt::KeepAspectRatio));
 
     this->createActions();
 
     ui->btn_earthquake->setChecked(true);
-    loadFile(":/resources/motions/motion.json");
+    loadFile(":/resources/motions/motion1.json");
     updatePlots();
 }
 
@@ -183,39 +192,58 @@ void MainWindow::createActions() {
 
 void MainWindow::on_btn_earthquake_clicked()
 {
+    ui->MotionSelectioncomboBox->setEnabled(true);
     ui->frequencySpinBox->setReadOnly(true);
     ui->frequencySpinBox->setStyleSheet("QDoubleSpinBox {background-color: lightGray; color: white;}");
     ui->frequencySlider->setEnabled(false);
     ui->loadMotion->setEnabled(false);
-    loadFile(":/resources/motions/motion.json");
+    ui->userMotionFile->setReadOnly(true);
+    ui->userMotionFile->setStyleSheet("QLineEdit {background-color: lightGray; color: white;}");
+    ui->MotionSelectioncomboBox->currentIndex();
+    loadFile(QString (":/resources/motions/motion%1.json").arg(ui->MotionSelectioncomboBox->currentIndex() + 1));
     updatePlots();
 }
+
+
+void MainWindow::on_MotionSelectioncomboBox_currentIndexChanged(int index)
+{
+    loadFile(QString (":/resources/motions/motion%1.json").arg(index + 1));
+    updatePlots();
+}
+
 void MainWindow::on_btn_sine_clicked()
 {
     m_TFunctionCalc.sinRecord();
+    ui->MotionSelectioncomboBox->setEnabled(false);
     ui->frequencySpinBox->setReadOnly(false);
     ui->frequencySpinBox->setStyleSheet("QDoubleSpinBox {background-color: white; color: black;}");
     ui->frequencySlider->setEnabled(true);
     ui->loadMotion->setEnabled(false);
+    ui->userMotionFile->setReadOnly(true);
+    ui->userMotionFile->setStyleSheet("QLineEdit {background-color: lightGray; color: white;}");
     updatePlots();
 }
 
 void MainWindow::on_btn_sweep_clicked()
 {
     m_TFunctionCalc.sweepRecord();
+    ui->MotionSelectioncomboBox->setEnabled(false);
     ui->frequencySpinBox->setReadOnly(true);
     ui->frequencySpinBox->setStyleSheet("QDoubleSpinBox {background-color: lightGray; color: white;}");
     ui->frequencySlider->setEnabled(false);
     ui->loadMotion->setEnabled(false);
+    ui->userMotionFile->setReadOnly(true);
+    ui->userMotionFile->setStyleSheet("QLineEdit {background-color: lightGray; color: white;}");
     updatePlots();
 }
 
 void MainWindow::on_btn_loadMotion_clicked()
 {
-   ui->loadMotion->setEnabled(true);
-   ui->userMotionFile->setReadOnly(false);
-   ui->userMotionFile->setReadOnly(false);
-   ui->userMotionFile->setStyleSheet("QLineEdit {background-color: white; color: black;}");
+    ui->MotionSelectioncomboBox->setEnabled(false);
+    ui->loadMotion->setEnabled(true);
+    ui->userMotionFile->setReadOnly(false);
+    ui->userMotionFile->setReadOnly(false);
+    ui->userMotionFile->setStyleSheet("QLineEdit {background-color: white; color: black;}");
 }
 
 void MainWindow::on_loadMotion_clicked()
@@ -425,25 +453,30 @@ void MainWindow::updatePlots()
     m_absIFft = m_TFunctionCalc.getIFft();
     m_accOutput = m_TFunctionCalc.getAccelT();
 
-    ui->AccOFig->clear();
-    ui->AccOFig->plot(m_time, m_accOutput, SimFigure::LineType::Solid, Qt::blue);
-    ui->AccOFig->setLabelFontSize(8);
+    ui->AccOutputFig->clear();
+    ui->AccOutputFig->plot(m_time, m_accOutput, SimFigure::LineType::Solid, Qt::blue);
+    ui->AccOutputFig->setLabelFontSize(8);
+    ui->AccOutputFig->setXLim(0, m_time.back());
 
-    ui->FOFig->clear();
-    ui->FOFig->plot(m_freq, m_absIFft, SimFigure::LineType::Solid, Qt::black);
-    ui->FOFig->setLabelFontSize(8);
+    ui->FourierOutputFig->clear();
+    ui->FourierOutputFig->plot(m_freq, m_absIFft, SimFigure::LineType::Solid, Qt::black);
+    ui->FourierOutputFig->setLabelFontSize(8);
+    ui->FourierOutputFig->setXLim(0, 25);
 
-    ui->HFig->clear();
-    ui->HFig->plot(m_freq, m_soilTF, SimFigure::LineType::Solid, Qt::red);
-    ui->HFig->setLabelFontSize(8);
+    ui->TransferFunctionFig->clear();
+    ui->TransferFunctionFig->plot(m_freq, m_soilTF, SimFigure::LineType::Solid, Qt::red);
+    ui->TransferFunctionFig->setLabelFontSize(8);
+    ui->TransferFunctionFig->setXLim(0, 25);
 
-    ui->FIFig->clear();
-    ui->FIFig->plot(m_freq, m_absFft, SimFigure::LineType::Solid, Qt::black);
-    ui->FIFig->setLabelFontSize(8);
+    ui->FourierInputFig->clear();
+    ui->FourierInputFig->plot(m_freq, m_absFft, SimFigure::LineType::Solid, Qt::black);
+    ui->FourierInputFig->setLabelFontSize(8);
+    ui->FourierInputFig->setXLim(0, 25);
 
-    ui->AccIFig->clear();
-    ui->AccIFig->plot(m_time, m_accInput, SimFigure::LineType::Solid, Qt::blue);
-    ui->AccIFig->setLabelFontSize(8);
+    ui->AccInputFig->clear();
+    ui->AccInputFig->plot(m_time, m_accInput, SimFigure::LineType::Solid, Qt::blue);
+    ui->AccInputFig->setLabelFontSize(8);
+    ui->AccInputFig->setXLim(0, m_time.back());
 
 
 }
