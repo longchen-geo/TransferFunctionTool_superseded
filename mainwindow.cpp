@@ -63,30 +63,38 @@ MainWindow::MainWindow(QWidget *parent)
     ui->AccOutputFig->setXLabel("Time [s]");
     ui->AccOutputFig->setYLabel("Accel. [g]");
     ui->AccOutputFig->setLabelFontSize(8);
+    ui->AccOutputFig->setMaximumHeight(0.15 * rec.height());
 
     ui->FourierOutputFig->showAxisControls(false);
     // ui->FourierOutputFig->setMinimumHeight(150);
     ui->FourierOutputFig->setXLabel("Freq. [Hz]");
     ui->FourierOutputFig->setYLabel("FA [g-s]");
     ui->FourierOutputFig->setLabelFontSize(8);
+    ui->FourierOutputFig->setMaximumHeight(0.15 * rec.height());
 
     ui->TransferFunctionFig->showAxisControls(false);
     // ui->TransferFunctionFig->setMinimumHeight(150);
     ui->TransferFunctionFig->setXLabel("Freq. [Hz]");
     ui->TransferFunctionFig->setYLabel("[H]");
     ui->TransferFunctionFig->setLabelFontSize(8);
+    ui->TransferFunctionFig->setMaximumHeight(0.15 * rec.height());
+
 
     ui->FourierInputFig->showAxisControls(false);
     // ui->FourierInputFig->setMinimumHeight(150);
     ui->FourierInputFig->setXLabel("Freq. [Hz]");
     ui->FourierInputFig->setYLabel("FA [g-s]");
     ui->FourierInputFig->setLabelFontSize(8);
+    ui->FourierInputFig->setMaximumHeight(0.15 * rec.height());
+
 
     ui->AccInputFig->showAxisControls(false);
     // ui->AccInputFig->setMinimumHeight(150);
     ui->AccInputFig->setXLabel("Time [s]");
     ui->AccInputFig->setYLabel("Accel. [g]");
     ui->AccInputFig->setLabelFontSize(8);
+    ui->AccInputFig->setMaximumHeight(0.15 * rec.height());
+
 
     // initial values
     double damping = 10;
@@ -165,9 +173,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->MotionSelectioncomboBox->setCurrentIndex(0);
 
     QPixmap mypix (":/resources/schematic.png");
-    int w = ui->schematic->width();
-    int h = ui->schematic->height();
-    ui->schematic->setPixmap(mypix.scaled(1.5 * w, 1.5 * h, Qt::KeepAspectRatio));
+    ui->schematic->setPixmap(mypix.scaled(0.2 * rec.width(), 0.2 * rec.height(), Qt::KeepAspectRatio));
 
     this->createActions();
 
@@ -216,7 +222,7 @@ void MainWindow::on_btn_sine_clicked()
     m_TFunctionCalc.sinRecord();
     ui->MotionSelectioncomboBox->setEnabled(false);
     ui->frequencySpinBox->setReadOnly(false);
-    ui->frequencySpinBox->setStyleSheet("QDoubleSpinBox {background-color: white; color: black;}");
+    ui->frequencySpinBox->setStyleSheet("QDoubleSpinBox {background-color: lightGray; color: black;}");
     ui->frequencySlider->setEnabled(true);
     ui->loadMotion->setEnabled(false);
     ui->userMotionFile->setReadOnly(true);
@@ -243,7 +249,7 @@ void MainWindow::on_btn_loadMotion_clicked()
     ui->loadMotion->setEnabled(true);
     ui->userMotionFile->setReadOnly(false);
     ui->userMotionFile->setReadOnly(false);
-    ui->userMotionFile->setStyleSheet("QLineEdit {background-color: white; color: black;}");
+    ui->userMotionFile->setStyleSheet("QLineEdit {background-color: lightGray; color: black;}");
 }
 
 void MainWindow::on_loadMotion_clicked()

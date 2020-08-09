@@ -13,6 +13,10 @@ QPushButton {
     padding: 3px;
 }
 
+QPushButton:disabled {
+    background-color:lightgrey;
+}
+
 QPushButton:pressed {
     background-color: #B0BEC5;
     border-style: inset;

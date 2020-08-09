@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "C:\SourceCode\SimCenter\SimCenterCommon_fork\SimFigure\source\simfigure.h"
+#include "simfigure.h"
 #include "TFunctionCalc.h"
 
 
