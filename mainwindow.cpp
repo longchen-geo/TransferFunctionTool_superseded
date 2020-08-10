@@ -172,9 +172,19 @@ MainWindow::MainWindow(QWidget *parent)
     ui->MotionSelectioncomboBox->addItems({"Motion 1", "Motion 2", "Motion 3", "Motion 4"});
     ui->MotionSelectioncomboBox->setCurrentIndex(0);
 
-    QPixmap mypix (":/resources/schematic.png");
-    ui->schematic->setPixmap(mypix.scaled(0.2 * rec.width(), 0.2 * rec.height(), Qt::KeepAspectRatio));
-
+    if (rec.width() > 1400) {
+        QPixmap mypix (":/resources/schematic.png");
+        ui->schematic->setPixmap(mypix.scaled(0.2 * rec.width(), 0.2 * rec.height(), Qt::KeepAspectRatio));
+    }
+    else {
+        // for low resolution screen
+        ui->schematic->hide();
+        ui->AccInputFig->setMaximumHeight(0.17 * rec.height());
+        ui->AccOutputFig->setMaximumHeight(0.17 * rec.height());
+        ui->FourierInputFig->setMaximumHeight(0.17 * rec.height());
+        ui->FourierOutputFig->setMaximumHeight(0.17 * rec.height());
+        ui->TransferFunctionFig->setMaximumHeight(0.17 * rec.height());
+    }
     this->createActions();
 
     ui->btn_earthquake->setChecked(true);
