@@ -169,7 +169,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->userMotionFile->setReadOnly(true);
     ui->userMotionFile->setStyleSheet("QLineEdit {background-color: lightGray; color: white;}");
 
-    ui->MotionSelectioncomboBox->addItems({"Motion 1", "Motion 2", "Motion 3", "Motion 4"});
+    ui->MotionSelectioncomboBox->addItems({"Motion 1", "RSN766", "RSN963", "RSN1203"});
     ui->MotionSelectioncomboBox->setCurrentIndex(0);
 
     if (rec.width() > 1400) {
@@ -364,68 +364,68 @@ void MainWindow::about()
 
 void MainWindow::copyright()
 {
-  QMessageBox msgBox;
-  QString copyrightText = QString("\
-                          <p>\
-                          The source code is licensed under a BSD 2-Clause License:<p>\
-                          \"Copyright (c) 2017-2019, The Regents of the University of California (Regents).\"\
-                          All rights reserved.<p>\
-                          <p>\
-                          Redistribution and use in source and binary forms, with or without \
-                          modification, are permitted provided that the following conditions are met:\
-                          <p>\
-                          1. Redistributions of source code must retain the above copyright notice, this\
-                          list of conditions and the following disclaimer.\
-                          \
-                          \
-                          2. Redistributions in binary form must reproduce the above copyright notice,\
-                          this list of conditions and the following disclaimer in the documentation\
-                          and/or other materials provided with the distribution.\
-                          <p>\
-                          THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND\
-                          ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\
-                          WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\
-                          DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR\
-                          ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\
-                          (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\
-                          LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\
-          ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\
-          (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\
-          SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\
-          <p>\
-          The views and conclusions contained in the software and documentation are those\
-          of the authors and should not be interpreted as representing official policies,\
-          either expressed or implied, of the FreeBSD Project.\
-          <p>\
-          REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, \
-          THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.\
-          THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS \
-          PROVIDED \"AS IS\". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,\
-          UPDATES, ENHANCEMENTS, OR MODIFICATIONS.\
-          <p>\
-          ------------------------------------------------------------------------------------\
-          <p>\
-          The compiled binary form of this application is licensed under a GPL Version 3 license.\
-          The licenses are as published by the Free Software Foundation and appearing in the LICENSE file\
-          included in the packaging of this application. \
-          <p>\
-          ------------------------------------------------------------------------------------\
-          <p>\
-          This software makes use of the QT packages (unmodified): core, gui, widgets and network\
-                                                                   <p>\
-                                                                   QT is copyright \"The Qt Company Ltd&quot; and licensed under the GNU Lesser General \
-                                                                   Public License (version 3) which references the GNU General Public License (version 3)\
-    <p>\
-    The licenses are as published by the Free Software Foundation and appearing in the LICENSE file\
-    included in the packaging of this application. \
-    <p>\
-    ");
+    QMessageBox msgBox;
+    QString copyrightText = QString("\
+                                    <p>\
+                                    The source code is licensed under a BSD 2-Clause License:<p>\
+                                    \"Copyright (c) 2017-2019, The Regents of the University of California (Regents).\"\
+                                    All rights reserved.<p>\
+                                    <p>\
+                                    Redistribution and use in source and binary forms, with or without \
+                                    modification, are permitted provided that the following conditions are met:\
+                                    <p>\
+                                    1. Redistributions of source code must retain the above copyright notice, this\
+                                    list of conditions and the following disclaimer.\
+                                    \
+                                    \
+                                    2. Redistributions in binary form must reproduce the above copyright notice,\
+                                    this list of conditions and the following disclaimer in the documentation\
+                                    and/or other materials provided with the distribution.\
+                                    <p>\
+                                    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND\
+                                    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\
+                                    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\
+                                    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR\
+                                    ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\
+                                    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\
+                                    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\
+            ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\
+            (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\
+            SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\
+            <p>\
+            The views and conclusions contained in the software and documentation are those\
+            of the authors and should not be interpreted as representing official policies,\
+            either expressed or implied, of the FreeBSD Project.\
+            <p>\
+            REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, \
+            THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.\
+            THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS \
+            PROVIDED \"AS IS\". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,\
+            UPDATES, ENHANCEMENTS, OR MODIFICATIONS.\
+            <p>\
+            ------------------------------------------------------------------------------------\
+            <p>\
+            The compiled binary form of this application is licensed under a GPL Version 3 license.\
+            The licenses are as published by the Free Software Foundation and appearing in the LICENSE file\
+            included in the packaging of this application. \
+            <p>\
+            ------------------------------------------------------------------------------------\
+            <p>\
+            This software makes use of the QT packages (unmodified): core, gui, widgets and network\
+                                                                     <p>\
+                                                                     QT is copyright \"The Qt Company Ltd&quot; and licensed under the GNU Lesser General \
+                                                                     Public License (version 3) which references the GNU General Public License (version 3)\
+      <p>\
+      The licenses are as published by the Free Software Foundation and appearing in the LICENSE file\
+      included in the packaging of this application. \
+      <p>\
+      ");
 
-  QSpacerItem *theSpacer = new QSpacerItem(700, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
-  msgBox.setText(copyrightText);
-  QGridLayout *layout = (QGridLayout*)msgBox.layout();
-  layout->addItem(theSpacer, layout->rowCount(),0,1,layout->columnCount());
-  msgBox.exec();
+      QSpacerItem *theSpacer = new QSpacerItem(700, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+    msgBox.setText(copyrightText);
+    QGridLayout *layout = (QGridLayout*)msgBox.layout();
+    layout->addItem(theSpacer, layout->rowCount(),0,1,layout->columnCount());
+    msgBox.exec();
 
 }
 

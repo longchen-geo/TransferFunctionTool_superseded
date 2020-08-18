@@ -40,44 +40,44 @@ private slots:
     void on_btn_loadMotion_clicked();
 
     void notifyVsIntValueChanged(int value) {
-         double doubleValue = value / 10.0;
-         emit doubleVsValueChanged(doubleValue);
-     }
+        double doubleValue = value / 10.0;
+        emit doubleVsValueChanged(doubleValue);
+    }
 
     void notifyVsDoubleValueChanged(double value) {
-         int intValue = value * 10;
-         emit intVsValueChanged(intValue);
-     }
+        int intValue = value * 10;
+        emit intVsValueChanged(intValue);
+    }
 
     void notifyHsIntValueChanged(int value) {
-         double doubleValue = value / 10.0;
-         emit doubleHsValueChanged(doubleValue);
-     }
+        double doubleValue = value / 10.0;
+        emit doubleHsValueChanged(doubleValue);
+    }
 
     void notifyHsDoubleValueChanged(double value) {
-         int intValue = value * 10;
-         emit intHsValueChanged(intValue);
-     }
+        int intValue = value * 10;
+        emit intHsValueChanged(intValue);
+    }
 
     void notifyDampingIntValueChanged(int value) {
-         double doubleValue = value / 100.0;
-         emit doubleDampingValueChanged(doubleValue);
-     }
+        double doubleValue = value / 100.0;
+        emit doubleDampingValueChanged(doubleValue);
+    }
 
     void notifyDampingDoubleValueChanged(double value) {
-         int intValue = value * 100;
-         emit intDampingValueChanged(intValue);
-     }
+        int intValue = value * 100;
+        emit intDampingValueChanged(intValue);
+    }
 
     void notifyFrequencyIntValueChanged(int value) {
-         double doubleValue = value / 100.0;
-         emit doubleFrequencyValueChanged(doubleValue);
-     }
+        double doubleValue = value / 100.0;
+        emit doubleFrequencyValueChanged(doubleValue);
+    }
 
     void notifyFrequencyDoubleValueChanged(double value) {
-         int intValue = value * 100;
-         emit intFrequencyValueChanged(intValue);
-     }
+        int intValue = value * 100;
+        emit intFrequencyValueChanged(intValue);
+    }
 
     /*
     void newFile();

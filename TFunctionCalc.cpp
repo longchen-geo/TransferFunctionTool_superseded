@@ -69,10 +69,10 @@ void TFunctionCalc::calcSoilTf(QVector<std::complex<double>>& tf)
          *       cos ( 2* PI * freq * H / (Vs(1+ i*damping))
          *
          */
-         kstar = std::complex<double>(2.0 * M_PI * m_freq[i] / m_Vs, -m_damping * 2.0 * M_PI * m_freq[i] / m_Vs);
-         Vsstar = std::complex<double>(m_Vs, m_damping * m_Vs);
-         //tf[i] = 1.0/cos(kstar*H);
-         tf[i] = 1.0/cos(2.0 * M_PI * m_freq[i] *m_H /Vsstar);
+        kstar = std::complex<double>(2.0 * M_PI * m_freq[i] / m_Vs, -m_damping * 2.0 * M_PI * m_freq[i] / m_Vs);
+        Vsstar = std::complex<double>(m_Vs, m_damping * m_Vs);
+        //tf[i] = 1.0/cos(kstar*H);
+        tf[i] = 1.0/cos(2.0 * M_PI * m_freq[i] *m_H /Vsstar);
     }
 }
 
@@ -196,14 +196,14 @@ void TFunctionCalc::sweepRecord()
 {
     int nPoints = 8000;
     double time;
-    m_dt = 0.002;
+    m_dt = 0.001;
     m_acc.resize(nPoints);
     m_time.resize(nPoints);
 
     for (int i=0; i<m_time.size();i++){
         time = i * m_dt;
         m_time[i]= time;
-        m_acc[i] = sin(25.0 * time + 150.0 * (time * time / 2.0) / 16.0);
+        m_acc[i] = sin(25.0 * time + 100.0 * (time * time / 2.0) / 8.0);
     }
 
     setFreq();
